@@ -112,6 +112,17 @@ class Recommendation(Base):
         nullable=False,
     )
 
+    approved_by_user_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        ForeignKey(
+            "users.id",
+            ondelete="RESTRICT",
+            name="fk_recommendations_approved_by_user_id_users",
+        ),
+        nullable=True,
+        index=True,
+    )
+
     approved_by: Mapped[str | None] = mapped_column(
         String(255),
         nullable=True,
