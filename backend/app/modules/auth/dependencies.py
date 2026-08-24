@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from uuid import UUID
 
 import jwt
@@ -66,3 +67,30 @@ def get_current_user(
         raise credentials_error
 
     return user
+
+
+def require_roles(*allowed_roles: str) -> Callable[..., User]:
+    if not allowed_roles:
+        raise ValueError("At least one allowed role is required")
+
+    normalized_roles = {
+        role.strip().upper()
+        for role in allowed_roles
+    }
+
+    def role_dependency(
+        current_user: User = Depends(get_current_user),
+    ) -> User:
+        if current_user.role.upper() not in normalized_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions",
+            )
+
+        return current_user
+
+    return role_dependency
+
+
+require_admin = require_roles("ADMIN")
+require_analyst_or_admin = require_roles("ANALYST", "ADMIN")
