@@ -1,0 +1,2151 @@
+# PayGuard AI — Razorpay Buildathon Demo Flow
+
+## 1. Document Purpose
+
+This document defines the official demonstration flow for **PayGuard AI — Autonomous AI Risk Manager for Digital Payments**.
+
+The demo is designed to communicate the product clearly within a short hackathon presentation.
+
+The judge should understand:
+
+* What problem PayGuard solves
+* What normal payment health looks like
+* How PayGuard detects abnormal payment behavior
+* How deterministic risk intelligence works
+* How related risk signals become incidents
+* How financial exposure is calculated
+* How AI investigates the incident
+* How recommendations are generated
+* How humans remain in control
+* How the AI Copilot answers questions using actual PayGuard data
+* How Razorpay/test-mode payment events fit into the system
+
+The demo must feel like a complete product story rather than a tour of disconnected features.
+
+---
+
+# 2. Core Demo Story
+
+The demonstration follows:
+
+```text
+NORMAL PAYMENT TRAFFIC
+        ↓
+PAYMENT FAILURE SPIKE
+        ↓
+PAYGUARD DETECTS ANOMALY
+        ↓
+RISK ENGINE ANALYZES EVIDENCE
+        ↓
+INCIDENT CREATED
+        ↓
+REVENUE AT RISK CALCULATED
+        ↓
+AI INVESTIGATES
+        ↓
+ROOT CAUSE EXPLAINED
+        ↓
+ACTION RECOMMENDED
+        ↓
+HUMAN REMAINS IN CONTROL
+        ↓
+AI COPILOT ANSWERS QUESTIONS
+```
+
+This is the primary story of PayGuard AI.
+
+---
+
+# 3. Main Demo Scenario
+
+Primary scenario:
+
+```text
+UPI Bank Degradation
+```
+
+Synthetic provider:
+
+```text
+ABC Bank
+```
+
+Payment method:
+
+```text
+UPI
+```
+
+Normal baseline:
+
+```text
+UPI failure rate:
+3–5%
+```
+
+Injected degradation:
+
+```text
+ABC Bank UPI failure rate:
+25–35%
+```
+
+Other payment methods:
+
+```text
+Healthy
+```
+
+Other banks:
+
+```text
+Mostly healthy
+```
+
+Expected system conclusion:
+
+```text
+Possible ABC Bank-associated UPI degradation
+```
+
+The demo must never claim that a real bank is experiencing an outage.
+
+---
+
+# 4. Why This Scenario
+
+This scenario demonstrates that PayGuard is not simply a fraud classifier.
+
+The system must distinguish:
+
+```text
+CUSTOMER RISK
+```
+
+from:
+
+```text
+PAYMENT INFRASTRUCTURE RISK
+```
+
+A large payment failure spike may come from:
+
+* Bank degradation
+* UPI network issues
+* Merchant integration problems
+* Payment-provider issues
+
+rather than customer fraud.
+
+This makes the project more relevant to a real payment platform.
+
+---
+
+# 5. Demo Duration
+
+Preferred full demonstration:
+
+```text
+4–5 minutes
+```
+
+Possible compressed version:
+
+```text
+2–3 minutes
+```
+
+The presentation should prioritize the complete intelligence loop rather than showing every page.
+
+---
+
+# 6. Recommended Presentation Structure
+
+```text
+0:00 – 0:30
+Problem + Product
+
+0:30 – 1:00
+Healthy Dashboard
+
+1:00 – 1:30
+Trigger Simulation
+
+1:30 – 2:10
+Risk Detection
+
+2:10 – 3:10
+Incident + AI Investigation
+
+3:10 – 3:45
+Recommendation + Human Control
+
+3:45 – 4:30
+AI Copilot
+
+4:30 – 5:00
+Architecture / Razorpay Integration / Closing
+```
+
+---
+
+# 7. Opening Statement
+
+The demo should begin with the problem.
+
+Suggested message:
+
+```text
+Digital payment systems process thousands of transactions across
+multiple banks, payment methods and merchants.
+
+When something goes wrong, the difficult question is often not simply
+"Did a payment fail?"
+
+The real questions are:
+
+Why are payments failing?
+
+Is this fraud, a merchant problem, or a provider degradation?
+
+How much money is currently at risk?
+
+And what should the operations team do next?
+
+PayGuard AI is an autonomous AI Risk Manager designed to answer those questions.
+```
+
+---
+
+# 8. Product One-Line Description
+
+Use:
+
+```text
+PayGuard AI continuously monitors payment activity, detects risk and anomalies,
+groups related signals into incidents, investigates likely root causes using AI,
+calculates financial exposure, and recommends controlled mitigation actions.
+```
+
+Short version:
+
+```text
+PayGuard AI turns raw payment failures into explainable, actionable risk incidents.
+```
+
+---
+
+# 9. Screen 1 — Dashboard
+
+Route:
+
+```text
+/dashboard
+```
+
+The demo should initially show a healthy state.
+
+Example:
+
+```text
+PAYMENT HEALTH
+
+96 / 100
+
+Healthy
+```
+
+```text
+TRANSACTIONS MONITORED
+
+12,482
+```
+
+```text
+UPI FAILURE RATE
+
+4.1%
+```
+
+```text
+REVENUE AT RISK
+
+₹12,400
+```
+
+```text
+CRITICAL INCIDENTS
+
+0
+```
+
+Exact values may vary according to generated demo data.
+
+---
+
+# 10. What to Explain on Dashboard
+
+Mention:
+
+```text
+This is PayGuard's real-time payment-risk command center.
+```
+
+Point out:
+
+* Payment health
+* Transaction volume
+* Success/failure rate
+* Revenue at risk
+* Critical transactions
+* Active incidents
+* Payment-method health
+* Provider health
+
+Do not spend too long explaining every chart.
+
+---
+
+# 11. Important Dashboard Message
+
+Emphasize:
+
+```text
+These values are calculated by backend payment and risk logic.
+
+They are not generated by the LLM.
+```
+
+This demonstrates that PayGuard uses AI responsibly.
+
+---
+
+# 12. Screen 2 — Simulator
+
+Navigate to:
+
+```text
+/simulator
+```
+
+Show available scenarios:
+
+```text
+Normal Traffic
+
+UPI Bank Degradation
+
+Velocity Attack
+
+Shared Device Abuse
+
+Duplicate Payments
+
+Refund Spike
+```
+
+Primary:
+
+```text
+UPI Bank Degradation
+```
+
+---
+
+# 13. Simulator Explanation
+
+Explain:
+
+```text
+For a reliable hackathon demo, PayGuard includes a transaction simulator.
+
+Importantly, the simulator does not fake dashboard numbers.
+
+It generates synthetic payment transactions that enter the exact same
+transaction ingestion, risk, incident and AI pipeline as payment events.
+```
+
+This is an important architectural point.
+
+---
+
+# 14. Start Bank Degradation Scenario
+
+Click:
+
+```text
+Run Scenario
+```
+
+for:
+
+```text
+UPI Bank Degradation
+```
+
+Expected UI:
+
+```text
+Simulation Running
+
+UPI Bank Degradation
+
+Transactions generated:
+127 / 250
+
+Detected signals:
+2
+
+Active incidents:
+1
+```
+
+---
+
+# 15. Expected Simulator Behavior
+
+Initial transactions:
+
+```text
+UPI success:
+~95–97%
+```
+
+Then injected failures:
+
+```text
+ABC Bank UPI failure:
+~25–35%
+```
+
+Other banks:
+
+```text
+~3–6%
+```
+
+Cards:
+
+```text
+~3–5% failure
+```
+
+This creates a concentrated payment infrastructure anomaly.
+
+---
+
+# 16. What Happens Internally
+
+The presenter may briefly explain:
+
+```text
+Every generated transaction flows through:
+```
+
+```text
+Transaction Ingestion
+        ↓
+Feature Extraction
+        ↓
+Risk Rules
+        ↓
+Anomaly Detection
+        ↓
+Risk Scoring
+        ↓
+Incident Correlation
+```
+
+No AI is required yet.
+
+---
+
+# 17. Screen 3 — Dashboard Changes
+
+Navigate back to:
+
+```text
+/dashboard
+```
+
+or allow automatic updates.
+
+Expected visible changes:
+
+```text
+PAYMENT HEALTH
+
+72 / 100
+
+Degraded
+```
+
+```text
+UPI FAILURE RATE
+
+28.4%
+
+5.5x baseline
+```
+
+```text
+REVENUE AT RISK
+
+₹4.28L
+```
+
+```text
+CRITICAL INCIDENTS
+
+1
+```
+
+Values may vary slightly while remaining in configured demo ranges.
+
+---
+
+# 18. Key Demo Moment
+
+The before/after dashboard is one of the strongest visual moments.
+
+Before:
+
+```text
+Healthy
+```
+
+After:
+
+```text
+Degraded
+```
+
+The user should immediately see:
+
+```text
+Something changed.
+```
+
+---
+
+# 19. Active Incident Card
+
+Expected:
+
+```text
+CRITICAL INCIDENT
+
+UPI Failure Spike Associated with ABC Bank
+
+342 affected transactions
+
+₹4.28L revenue at risk
+
+Started 8 min ago
+```
+
+Click:
+
+```text
+View Incident
+```
+
+---
+
+# 20. Screen 4 — Incident Detail
+
+Route:
+
+```text
+/incidents/:incidentId
+```
+
+This is the main product demonstration page.
+
+Expected header:
+
+```text
+PG-2026-000042
+
+UPI Failure Spike Associated with ABC Bank
+
+CRITICAL
+
+INVESTIGATING
+```
+
+---
+
+# 21. Incident Metrics
+
+Show:
+
+```text
+Risk Score
+91
+```
+
+```text
+Affected Transactions
+342
+```
+
+```text
+Affected Payment Value
+₹5.10L
+```
+
+```text
+Revenue at Risk
+₹4.28L
+```
+
+```text
+UPI Failure Rate
+28.4%
+```
+
+```text
+Historical Baseline
+5.1%
+```
+
+Again, demo values may vary slightly.
+
+---
+
+# 22. Explain Revenue at Risk
+
+Important wording:
+
+```text
+Revenue at risk is calculated by PayGuard's deterministic backend model
+using affected payment value and configured risk assumptions.
+
+The AI can explain this value, but it does not invent the financial amount.
+```
+
+This reinforces trustworthy system design.
+
+---
+
+# 23. Show Incident Trend
+
+Chart should show:
+
+```text
+Historical baseline
+```
+
+and:
+
+```text
+Current failure spike
+```
+
+with:
+
+```text
+Incident Detected
+```
+
+marker.
+
+Explain:
+
+```text
+PayGuard identified that the current failure rate is significantly above the normal baseline.
+```
+
+---
+
+# 24. Show Deterministic Evidence First
+
+Before AI, show risk/anomaly evidence.
+
+Example:
+
+```text
+BANK_FAILURE_SPIKE
+
+Observed:
+28.4%
+
+Baseline:
+5.1%
+
+Deviation:
+5.56x
+```
+
+and:
+
+```text
+PAYMENT_METHOD_FAILURE_SPIKE
+
+UPI current failure:
+18.7%
+
+Historical:
+4.2%
+```
+
+---
+
+# 25. Important Product Differentiator
+
+State:
+
+```text
+PayGuard's AI does not decide risk from scratch.
+
+The deterministic Risk Engine identifies the anomaly first.
+
+AI is then used to investigate and explain what the evidence means.
+```
+
+This is a core architectural selling point.
+
+---
+
+# 26. Screen 5 — AI Investigation
+
+Show:
+
+```text
+AI INVESTIGATION
+
+AI GENERATED
+```
+
+Expected:
+
+```text
+Likely Root Cause
+
+Possible ABC Bank-associated UPI degradation
+```
+
+```text
+Confidence
+
+91%
+
+VERY HIGH
+```
+
+---
+
+# 27. AI Investigation Summary
+
+Example:
+
+```text
+UPI payment failures increased significantly over the last several minutes.
+
+The failures are heavily concentrated among ABC Bank transactions,
+while card traffic and other payment providers remain near their normal baselines.
+
+The available evidence suggests a bank-associated UPI degradation rather
+than a merchant-wide payment integration issue.
+```
+
+---
+
+# 28. AI Evidence
+
+Expected evidence:
+
+```text
+• UPI failure rate increased from 5.1% to 28.4%.
+
+• ABC Bank represents approximately 81% of failed UPI transactions.
+
+• Card payment performance remains close to its historical baseline.
+
+• Merchant API health remains normal.
+
+• Other UPI banks show substantially lower failure rates.
+```
+
+---
+
+# 29. AI Uncertainty
+
+Show explicitly:
+
+```text
+Uncertainty
+
+No direct external provider outage confirmation is currently available.
+```
+
+This is important.
+
+It demonstrates that PayGuard AI:
+
+```text
+does not pretend to know what the evidence cannot prove.
+```
+
+---
+
+# 30. Explain Confidence
+
+Say:
+
+```text
+The confidence score reflects the strength and consistency of the available
+evidence. It is not presented as an absolute guarantee.
+```
+
+---
+
+# 31. Screen 6 — Recommendation
+
+Expected:
+
+```text
+RECOMMENDED ACTION
+
+Promote alternate payment methods
+```
+
+Reason:
+
+```text
+Failures are concentrated within ABC Bank UPI transactions while card
+payments remain healthy.
+```
+
+Expected impact:
+
+```text
+Reduce checkout failures while the affected payment path recovers.
+```
+
+---
+
+# 32. Human-in-the-Loop Message
+
+Explain:
+
+```text
+PayGuard can automatically perform safe actions such as monitoring,
+alerting and investigation.
+
+But sensitive payment actions remain human-controlled.
+```
+
+Examples:
+
+```text
+Blocking accounts
+Changing limits
+Disabling payment methods
+Rate limiting
+Changing routing
+```
+
+require approval.
+
+---
+
+# 33. Optional Approval Demo
+
+If time allows, show:
+
+```text
+/approvals
+```
+
+Example:
+
+```text
+PENDING APPROVAL
+
+Rate-limit suspicious transaction pattern
+```
+
+Buttons:
+
+```text
+Reject
+Approve
+```
+
+For the Buildathon:
+
+```text
+execution_mode = SIMULATED
+```
+
+Explain:
+
+```text
+The action is intentionally simulated in the demo environment.
+```
+
+---
+
+# 34. Screen 7 — Incident Timeline
+
+Show:
+
+```text
+16:32
+
+Anomaly detected
+```
+
+```text
+16:33
+
+Incident created
+```
+
+```text
+16:34
+
+Severity changed to CRITICAL
+```
+
+```text
+16:35
+
+AI investigation started
+```
+
+```text
+16:36
+
+Investigation completed
+```
+
+```text
+16:37
+
+Recommendation generated
+```
+
+---
+
+# 35. Timeline Message
+
+Explain:
+
+```text
+Every major decision is traceable.
+
+PayGuard keeps a timeline of what the system detected, when it investigated,
+and what actions were recommended or approved.
+```
+
+This communicates auditability.
+
+---
+
+# 36. Screen 8 — AI Risk Copilot
+
+Navigate:
+
+```text
+/copilot
+```
+
+Use the primary question:
+
+```text
+Why are UPI payments failing?
+```
+
+---
+
+# 37. Expected Copilot Answer
+
+Example:
+
+```text
+UPI failures are currently significantly above their historical baseline.
+
+The largest contributor is incident PG-2026-000042.
+
+ABC Bank accounts for approximately 81% of the affected UPI failures,
+while card traffic and other providers remain comparatively healthy.
+
+The current evidence therefore suggests a bank-associated UPI degradation
+rather than a merchant-wide integration issue.
+```
+
+---
+
+# 38. Copilot Evidence
+
+Below answer:
+
+```text
+Current UPI Failure Rate
+28.4%
+
+Historical Baseline
+5.1%
+
+ABC Bank Failure Share
+81%
+
+Card Failure Rate
+4.1%
+```
+
+Referenced incident:
+
+```text
+PG-2026-000042
+```
+
+---
+
+# 39. Copilot Differentiator
+
+Explain:
+
+```text
+The Copilot does not answer payment operations questions from general model knowledge.
+
+It first retrieves authorized PayGuard data, builds structured context,
+and only then asks the AI to explain the evidence.
+```
+
+This demonstrates grounding.
+
+---
+
+# 40. Optional Copilot Questions
+
+If judges ask for more:
+
+```text
+Which provider currently has the highest failure rate?
+```
+
+```text
+How much revenue is at risk?
+```
+
+```text
+Show me the critical incidents.
+```
+
+```text
+Why is transaction pay_demo_001 classified as critical?
+```
+
+```text
+What should the operations team do next?
+```
+
+---
+
+# 41. Razorpay Integration Explanation
+
+Toward the end, mention:
+
+```text
+The same transaction pipeline can receive Razorpay test-mode payment events.
+```
+
+Flow:
+
+```text
+Razorpay Test Event
+        ↓
+Signed Webhook
+        ↓
+Signature Verification
+        ↓
+Idempotency Check
+        ↓
+Normalization
+        ↓
+PayGuard Transaction Pipeline
+```
+
+---
+
+# 42. Important Razorpay Security Message
+
+State briefly:
+
+```text
+Razorpay webhook events are signature-verified using the original raw body
+before any payment data enters the PayGuard risk pipeline.
+```
+
+Duplicate events are idempotent.
+
+---
+
+# 43. Why Simulator Exists Alongside Razorpay
+
+Explain:
+
+```text
+Razorpay integration validates real payment-event compatibility.
+
+The simulator gives us deterministic risk scenarios so we can reliably
+demonstrate incidents such as bank degradation and velocity attacks.
+```
+
+Both use the same internal risk pipeline.
+
+---
+
+# 44. Architecture Slide / Diagram
+
+If showing architecture:
+
+```text
+Razorpay / Simulator
+        ↓
+Transaction Ingestion
+        ↓
+Feature Extraction
+        ↓
+Risk Rules
+        ↓
+Anomaly Detection
+        ↓
+Risk Score
+        ↓
+Incident Correlation
+        ↓
+Revenue at Risk
+        ↓
+AI Investigation
+        ↓
+Recommendation
+        ↓
+Human Approval
+        ↓
+Dashboard + Copilot
+```
+
+---
+
+# 45. Architecture Talking Point
+
+Keep explanation short:
+
+```text
+The important design choice is that the LLM sits above the deterministic
+risk layer rather than inside the critical payment path.
+
+So even if the AI provider fails, PayGuard can still detect risk,
+create incidents and calculate financial exposure.
+```
+
+---
+
+# 46. AI Failure Fallback Demo
+
+If AI provider fails during judging:
+
+Do not panic or restart the entire demo.
+
+Show:
+
+```text
+Risk Score
+Risk Factors
+Anomaly Signals
+Incident
+Revenue at Risk
+```
+
+Then AI panel:
+
+```text
+AI Investigation temporarily unavailable.
+
+Deterministic risk monitoring remains active.
+```
+
+Explain:
+
+```text
+AI is intentionally isolated from critical payment monitoring.
+```
+
+This can actually reinforce the architecture.
+
+---
+
+# 47. Razorpay Failure Fallback
+
+If Razorpay test webhooks are unavailable:
+
+Use:
+
+```text
+Simulator
+```
+
+Explain:
+
+```text
+The simulator uses the same normalized transaction-processing pipeline.
+```
+
+The main demo can continue.
+
+---
+
+# 48. Internet Failure Fallback
+
+If deployed environment loses external internet:
+
+Ideal backup:
+
+```text
+Local frontend
++
+Local backend
++
+Local PostgreSQL
++
+Simulator
+```
+
+The deterministic system should still demonstrate:
+
+```text
+Transaction ingestion
+Risk scoring
+Incident generation
+Revenue at risk
+```
+
+AI may be unavailable.
+
+---
+
+# 49. Demo Precondition
+
+Before starting the official demonstration:
+
+Ensure:
+
+```text
+Demo database reset
+```
+
+or:
+
+```text
+known baseline demo state
+```
+
+Then:
+
+```text
+Normal traffic running
+```
+
+The dashboard should not already contain unexplained critical incidents.
+
+---
+
+# 50. Demo Reset Procedure
+
+Preferred:
+
+```text
+Reset synthetic transactions
+↓
+Reset synthetic incidents
+↓
+Reset synthetic alerts
+↓
+Seed demo merchant
+↓
+Seed risk rules
+↓
+Generate normal baseline
+```
+
+Do not manually modify database tables during presentation.
+
+---
+
+# 51. Pre-Demo Checklist
+
+Before judging:
+
+```text
+[ ] Backend running
+
+[ ] Frontend running
+
+[ ] PostgreSQL connected
+
+[ ] Demo user login works
+
+[ ] Dashboard loads
+
+[ ] Simulator loads
+
+[ ] Bank degradation scenario tested
+
+[ ] Incident page tested
+
+[ ] AI provider available
+
+[ ] AI fallback tested
+
+[ ] Copilot tested
+
+[ ] TEST MODE visible
+
+[ ] No console errors
+
+[ ] No secrets visible
+
+[ ] Demo reset tested
+```
+
+---
+
+# 52. Demo Reliability Requirement
+
+The exact primary scenario must work:
+
+```text
+3 consecutive times
+```
+
+before the project is considered ready.
+
+A single successful run is not sufficient.
+
+---
+
+# 53. Demo Freeze
+
+Before presentation:
+
+Do not make large changes to:
+
+```text
+Database schema
+Risk thresholds
+Incident correlation
+AI schema
+Authentication
+Core simulator behavior
+```
+
+unless fixing a blocker.
+
+Focus on:
+
+```text
+Reliability
+UI polish
+Performance
+Copy
+Bug fixes
+```
+
+---
+
+# 54. Demo Data Requirements
+
+Use fictional:
+
+```text
+ABC Bank
+XYZ Bank
+Demo Store
+```
+
+and synthetic:
+
+```text
+customer_demo_001
+device_demo_001
+pay_demo_001
+```
+
+Avoid any real customer data.
+
+---
+
+# 55. Demo UI Requirements
+
+The interface must clearly show:
+
+```text
+DEMO MODE
+```
+
+or:
+
+```text
+TEST MODE
+```
+
+This prevents synthetic traffic from being confused with live payment information.
+
+---
+
+# 56. Primary Metrics Before Scenario
+
+Recommended target range:
+
+```text
+Payment Health:
+90–100
+```
+
+```text
+Failure Rate:
+3–6%
+```
+
+```text
+Critical Incidents:
+0
+```
+
+```text
+Revenue at Risk:
+Low
+```
+
+---
+
+# 57. Primary Metrics During Scenario
+
+Recommended target range:
+
+```text
+Payment Health:
+60–80
+```
+
+```text
+UPI Failure Rate:
+20–35%
+```
+
+```text
+Critical Incidents:
+1
+```
+
+```text
+Revenue at Risk:
+Clearly elevated
+```
+
+Values should arise from the simulator and backend, not hardcoded UI state.
+
+---
+
+# 58. Incident Expected Outputs
+
+Main incident should include:
+
+```text
+Incident number
+
+Title
+
+CRITICAL severity
+
+Risk score
+
+Affected transaction count
+
+Affected payment value
+
+Revenue at risk
+
+Primary payment method
+
+Primary bank/provider
+
+Historical baseline
+
+Current metric
+
+Timeline
+
+AI investigation
+
+Recommendation
+```
+
+---
+
+# 59. AI Investigation Expected Outputs
+
+The investigation must contain:
+
+```text
+Summary
+
+Likely root cause
+
+Confidence
+
+Evidence
+
+Alternative explanation
+
+Uncertainty
+
+Recommended next check
+```
+
+---
+
+# 60. Recommended AI Root Cause
+
+Preferred when evidence supports it:
+
+```text
+Possible ABC Bank-associated UPI degradation
+```
+
+Avoid:
+
+```text
+ABC Bank is definitely down.
+```
+
+---
+
+# 61. Recommended AI Uncertainty
+
+Example:
+
+```text
+No direct external provider outage confirmation is currently available.
+```
+
+This is an important safety and trust signal.
+
+---
+
+# 62. Recommendation Expected Output
+
+Primary recommendation:
+
+```text
+Promote alternate payment methods
+```
+
+Secondary:
+
+```text
+Continue monitoring affected provider
+```
+
+Possible:
+
+```text
+Escalate incident
+```
+
+---
+
+# 63. Do Not Demo Too Many Features
+
+Do not spend presentation time on:
+
+```text
+Settings
+
+Full authentication implementation
+
+Every risk rule
+
+Every database table
+
+Every analytics chart
+
+Every simulator scenario
+```
+
+unless asked.
+
+Focus on the strongest story.
+
+---
+
+# 64. Best Pages to Show
+
+Priority:
+
+```text
+1. Dashboard
+
+2. Simulator
+
+3. Incident Detail
+
+4. AI Investigation
+
+5. AI Copilot
+```
+
+Optional:
+
+```text
+6. Transactions
+
+7. Approvals
+
+8. Architecture
+```
+
+---
+
+# 65. Optional Transaction-Level Demo
+
+If judges ask:
+
+Open:
+
+```text
+/transactions
+```
+
+select a critical transaction.
+
+Show:
+
+```text
+Risk Score:
+89
+```
+
+with factors:
+
+```text
++25 Extreme amount
+
++20 High velocity
+
++10 New device
+
++15 Repeated failures
+```
+
+Explain:
+
+```text
+This score is deterministic and explainable.
+```
+
+---
+
+# 66. Optional Fraud Scenario
+
+If additional time exists:
+
+Run:
+
+```text
+Shared Device Abuse
+```
+
+Expected:
+
+```text
+One device
+Multiple customers
+Repeated failures
+High transaction velocity
+```
+
+Incident:
+
+```text
+Potential Fraud Pattern
+```
+
+AI wording:
+
+```text
+Potential coordinated device-based abuse pattern.
+```
+
+Do not call the customers confirmed fraudsters.
+
+---
+
+# 67. Optional Velocity Attack Scenario
+
+Run:
+
+```text
+Velocity Attack
+```
+
+Expected:
+
+```text
+HIGH_VELOCITY
+
+EXTREME_VELOCITY
+
+REPEATED_FAILURES
+```
+
+Incident:
+
+```text
+VELOCITY_ATTACK
+```
+
+This demonstrates customer/behavioral risk rather than infrastructure degradation.
+
+---
+
+# 68. Judge Question — Why AI?
+
+Possible answer:
+
+```text
+Traditional monitoring can tell us that a failure rate crossed a threshold.
+
+PayGuard's AI layer helps explain why the anomaly is occurring,
+summarizes the evidence, compares competing hypotheses,
+communicates uncertainty and recommends the next operational action.
+
+The AI works on top of deterministic risk evidence rather than replacing it.
+```
+
+---
+
+# 69. Judge Question — Why Not Just Fraud Detection?
+
+Possible answer:
+
+```text
+Payment risk is broader than fraud.
+
+A spike in failed payments may come from a bank, payment method,
+merchant integration, customer behavior or coordinated abuse.
+
+PayGuard analyzes both transaction-level and infrastructure-level risk.
+```
+
+---
+
+# 70. Judge Question — What Makes It Agentic?
+
+Possible answer:
+
+```text
+PayGuard continuously observes payment activity, detects anomalies,
+creates and updates incidents, gathers evidence, triggers investigations,
+generates recommendations and monitors incident progression.
+
+For safe operations it acts autonomously.
+
+For sensitive financial actions it deliberately stops for human approval.
+```
+
+---
+
+# 71. Judge Question — What If AI Hallucinates?
+
+Possible answer:
+
+```text
+AI is not the source of truth.
+
+The Risk Engine generates deterministic scores and evidence first.
+
+The AI only receives controlled structured context,
+its output is schema-validated,
+and unsupported conclusions can fall back to UNKNOWN or insufficient evidence.
+
+Even if AI fails completely, the core risk system keeps working.
+```
+
+---
+
+# 72. Judge Question — How Does Razorpay Fit In?
+
+Possible answer:
+
+```text
+Razorpay test-mode webhooks enter through a signature-verified endpoint.
+
+Events are deduplicated, normalized into PayGuard's transaction schema,
+and then processed by the same risk engine used by the simulator.
+```
+
+---
+
+# 73. Judge Question — Why Revenue at Risk?
+
+Possible answer:
+
+```text
+Technical metrics like a 28% failure rate are useful,
+but operations teams also need to understand business impact.
+
+Revenue at Risk translates the incident into estimated financial exposure
+so teams can prioritize which incidents need immediate attention.
+```
+
+---
+
+# 74. Judge Question — Can It Take Actions Automatically?
+
+Possible answer:
+
+```text
+Safe actions such as monitoring, alerting, incident creation and investigation
+can be automatic.
+
+Sensitive financial actions require human approval.
+
+The hackathon environment simulates high-impact mitigations rather than
+executing real financial changes.
+```
+
+---
+
+# 75. Judge Question — Is It Machine Learning?
+
+Possible answer:
+
+```text
+The MVP uses a hybrid architecture.
+
+Deterministic rules provide explainability,
+statistical anomaly detection identifies deviations from baselines,
+and an LLM performs evidence-grounded investigation and recommendations.
+
+The architecture can later incorporate trained fraud or anomaly models.
+```
+
+---
+
+# 76. Judge Question — How Would This Scale?
+
+Possible answer:
+
+```text
+The MVP is intentionally implemented as a modular monolith for reliability
+and development speed.
+
+The transaction, risk, incident and AI modules are separated logically,
+so high-throughput components could later move to event-driven workers,
+queues or dedicated services without redesigning the product model.
+```
+
+---
+
+# 77. Judge Question — Why PayGuard?
+
+Possible answer:
+
+```text
+Because payment operations teams need more than alerts.
+
+They need a system that can detect an abnormal pattern,
+explain what changed,
+identify likely causes,
+measure financial impact
+and recommend what to do next.
+```
+
+---
+
+# 78. Strong Closing Statement
+
+Suggested:
+
+```text
+PayGuard AI transforms payment risk from a reactive dashboard into an
+intelligent investigation system.
+
+Instead of simply saying that payments are failing,
+it tells the team what changed,
+why it may be happening,
+how much money is affected,
+what evidence supports the conclusion,
+and what action should happen next.
+
+That is the core idea behind PayGuard AI.
+```
+
+---
+
+# 79. Short Closing Version
+
+```text
+From detection to investigation to action,
+PayGuard AI acts as an intelligent risk manager for payment operations.
+```
+
+---
+
+# 80. 3-Minute Compressed Demo
+
+If presentation time is short:
+
+## 0:00–0:20
+
+Explain problem.
+
+## 0:20–0:40
+
+Show healthy Dashboard.
+
+## 0:40–1:00
+
+Run Bank Degradation.
+
+## 1:00–1:30
+
+Show Dashboard failure spike and incident.
+
+## 1:30–2:20
+
+Open incident:
+
+```text
+Risk
+Revenue at Risk
+AI Investigation
+Evidence
+Recommendation
+```
+
+## 2:20–2:45
+
+Ask Copilot:
+
+```text
+Why are UPI payments failing?
+```
+
+## 2:45–3:00
+
+Closing.
+
+---
+
+# 81. 5-Minute Full Demo
+
+Recommended:
+
+```text
+0:00
+Problem
+
+0:30
+Healthy dashboard
+
+1:00
+Simulator
+
+1:30
+Dashboard anomaly
+
+2:00
+Incident detail
+
+2:30
+Risk evidence
+
+3:00
+AI Investigation
+
+3:30
+Recommendation / human approval
+
+4:00
+Copilot
+
+4:30
+Razorpay + architecture
+
+4:50
+Closing
+```
+
+---
+
+# 82. Never Do During Demo
+
+Avoid:
+
+```text
+Editing code live
+
+Running migrations live
+
+Typing API keys
+
+Opening .env
+
+Showing real secrets
+
+Manually inserting database rows
+
+Debugging an unknown backend failure live
+
+Claiming demo bank outage is real
+
+Claiming AI confidence is guaranteed probability
+
+Showing broken unfinished pages
+```
+
+---
+
+# 83. Demo Browser Preparation
+
+Before judges arrive:
+
+Open required tabs/pages.
+
+Suggested:
+
+```text
+Tab 1
+Dashboard
+
+Tab 2
+Simulator
+
+Tab 3
+Swagger / architecture if needed
+```
+
+Do not keep sensitive dashboards or environment files visible.
+
+---
+
+# 84. Browser Zoom
+
+Verify UI at presentation resolution.
+
+Avoid:
+
+```text
+Tiny text
+Horizontal overflow
+Cut-off tables
+```
+
+Use a zoom level that clearly displays dashboard metrics.
+
+---
+
+# 85. Terminal Preparation
+
+Keep backend/frontend terminals running but not central to the presentation.
+
+If needed, terminal logs can demonstrate:
+
+```text
+Transaction processed
+
+Risk generated
+
+Incident created
+```
+
+but the product UI should remain the primary demonstration.
+
+---
+
+# 86. Known-Good Build
+
+Before final judging:
+
+Identify:
+
+```text
+known-good Git commit
+```
+
+Optionally tag:
+
+```text
+demo-v1
+```
+
+Do not present experimental uncommitted code if the stable build works.
+
+---
+
+# 87. Main Demo Success Criteria
+
+The primary demo succeeds when the judge observes:
+
+1. Healthy payment state.
+2. Synthetic degradation introduced.
+3. Real transaction pipeline processes events.
+4. Failure rate changes visibly.
+5. Risk Engine detects abnormal behavior.
+6. Related transactions form one incident.
+7. Financial exposure is calculated.
+8. AI investigates using real evidence.
+9. AI communicates uncertainty.
+10. Recommendation appears.
+11. Sensitive actions remain controlled.
+12. Copilot answers using PayGuard data.
+
+---
+
+# 88. Product Story Summary
+
+The entire product should be understandable as:
+
+```text
+OBSERVE
+   ↓
+DETECT
+   ↓
+CORRELATE
+   ↓
+QUANTIFY
+   ↓
+INVESTIGATE
+   ↓
+RECOMMEND
+   ↓
+CONTROL
+   ↓
+MONITOR
+```
+
+---
+
+# 89. Final Demo Principle
+
+The presentation should not try to prove that PayGuard contains the largest amount of code.
+
+It should prove that PayGuard solves a meaningful payment-risk problem through a coherent end-to-end system.
+
+A successful demo leaves the judge with one clear idea:
+
+```text
+PayGuard does not merely alert me that something is wrong.
+
+It helps me understand what is wrong,
+why it may be happening,
+how much it matters,
+and what I should do next.
+```
