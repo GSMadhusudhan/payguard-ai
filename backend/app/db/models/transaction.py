@@ -22,9 +22,10 @@ class Transaction(Base):
 
     __table_args__ = (
         UniqueConstraint(
+            "merchant_id",
             "provider",
             "provider_payment_id",
-            name="uq_transactions_provider_payment_id",
+            name="uq_transactions_merchant_provider_payment_id",
         ),
         Index(
             "ix_transactions_merchant_occurred_at",
