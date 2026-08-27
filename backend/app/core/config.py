@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,6 +22,26 @@ class Settings(BaseSettings):
     database_url: str = (
         "postgresql+psycopg://payguard:payguard@localhost:5432/payguard"
     )
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_database_url(cls, value: str) -> str:
+        """Use psycopg 3 for hosting-provider PostgreSQL URLs."""
+        if value.startswith("postgres://"):
+            return value.replace(
+                "postgres://",
+                "postgresql+psycopg://",
+                1,
+            )
+
+        if value.startswith("postgresql://"):
+            return value.replace(
+                "postgresql://",
+                "postgresql+psycopg://",
+                1,
+            )
+
+        return value
 
     # Authentication
     jwt_secret: str | None = None
