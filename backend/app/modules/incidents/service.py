@@ -125,6 +125,8 @@ def detect_bank_degradation(
             Incident.incident_type == "BANK_DEGRADATION",
             Incident.payment_method == payload.payment_method,
             Incident.bank_name == payload.bank_name,
+            Incident.detected_at >= start,
+            Incident.detected_at <= end,
             ~Incident.status.in_(["RESOLVED", "CLOSED"]),
         )
     )
