@@ -3,10 +3,18 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.db.models import Transaction, User
-from app.modules.transactions.schemas import TransactionIngestRequest, TransactionIngestResponse
+from app.modules.risk.service import evaluate_transaction_risk
+from app.modules.transactions.schemas import (
+    TransactionIngestRequest,
+    TransactionIngestResponse,
+)
 
 
-def _response(transaction: Transaction, duplicate: bool) -> TransactionIngestResponse:
+def _response(
+    transaction: Transaction,
+    *,
+    duplicate: bool,
+) -> TransactionIngestResponse:
     return TransactionIngestResponse(
         id=transaction.id,
         provider_payment_id=transaction.provider_payment_id,
@@ -30,12 +38,19 @@ def ingest_transaction(
         select(Transaction).where(
             Transaction.merchant_id == current_user.merchant_id,
             Transaction.provider == payload.provider,
-            Transaction.provider_payment_id == payload.provider_payment_id,
+            Transaction.provider_payment_id
+            == payload.provider_payment_id,
         )
     )
 
     if existing is not None:
         return _response(existing, duplicate=True)
+
+    assessment = evaluate_transaction_risk(
+        db,
+        merchant_id=current_user.merchant_id,
+        payload=payload,
+    )
 
     transaction = Transaction(
         merchant_id=current_user.merchant_id,
@@ -49,8 +64,8 @@ def ingest_transaction(
         customer_reference=payload.customer_reference,
         failure_code=payload.failure_code,
         failure_reason=payload.failure_reason,
-        risk_score=0,
-        risk_level="LOW",
+        risk_score=assessment.result.risk_score,
+        risk_level=assessment.result.risk_level.value,
         occurred_at=payload.occurred_at,
     )
 
@@ -59,16 +74,22 @@ def ingest_transaction(
     try:
         db.commit()
         db.refresh(transaction)
-        return _response(transaction, duplicate=False)
+
+        return _response(
+            transaction,
+            duplicate=False,
+        )
 
     except IntegrityError:
         db.rollback()
 
         existing = db.scalar(
             select(Transaction).where(
-                Transaction.merchant_id == current_user.merchant_id,
+                Transaction.merchant_id
+                == current_user.merchant_id,
                 Transaction.provider == payload.provider,
-                Transaction.provider_payment_id == payload.provider_payment_id,
+                Transaction.provider_payment_id
+                == payload.provider_payment_id,
             )
         )
 
