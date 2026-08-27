@@ -73,8 +73,8 @@ class Investigation(Base):
         nullable=True,
     )
 
-    uncertainty: Mapped[str | None] = mapped_column(
-        Text,
+    uncertainty: Mapped[dict | None] = mapped_column(
+        JSONB,
         nullable=True,
     )
 
