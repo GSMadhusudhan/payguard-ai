@@ -209,3 +209,29 @@ export interface RecommendationActionResponse {
   execution_mode?: string;
   execution_result?: Record<string, unknown> | null;
 }
+
+
+export interface CopilotEvidence {
+  label: string;
+  value: string;
+}
+
+export interface CopilotIncidentReference {
+  id: string;
+  incident_number: string;
+}
+
+export interface CopilotTransactionReference {
+  id: string;
+}
+
+export interface CopilotResponse {
+  conversation_id: string;
+  message_id: string;
+  intent: string;
+  answer: string;
+  referenced_incidents: CopilotIncidentReference[];
+  referenced_transactions: CopilotTransactionReference[];
+  evidence: CopilotEvidence[];
+  generated_at: string;
+}
