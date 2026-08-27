@@ -99,6 +99,7 @@ def extract_risk_features(
             merchant_id=merchant_id,
             start=current_start,
             end=now,
+            payment_method=payload.payment_method,
             bank_name=payload.bank_name,
         )
 
@@ -113,6 +114,7 @@ def extract_risk_features(
             merchant_id=merchant_id,
             start=baseline_start,
             end=baseline_end,
+            payment_method=payload.payment_method,
             bank_name=payload.bank_name,
         )
     else:

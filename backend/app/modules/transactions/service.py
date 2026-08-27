@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.db.models import Transaction, User
 from app.modules.risk.service import evaluate_transaction_risk
+from app.modules.incidents.service import detect_bank_degradation
 from app.modules.transactions.schemas import (
     TransactionIngestRequest,
     TransactionIngestResponse,
@@ -74,6 +75,14 @@ def ingest_transaction(
     try:
         db.commit()
         db.refresh(transaction)
+
+        detect_bank_degradation(
+            db,
+            merchant_id=current_user.merchant_id,
+            payload=payload,
+            assessment=assessment,
+        )
+        db.commit()
 
         return _response(
             transaction,
