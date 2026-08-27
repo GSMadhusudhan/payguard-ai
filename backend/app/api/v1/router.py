@@ -1,3 +1,5 @@
+from app.modules.read_api.router import router as read_api_router
+from app.modules.dashboard.router import router as dashboard_router
 from fastapi import APIRouter
 
 from app.api.v1.health import router as health_router
@@ -21,3 +23,6 @@ api_router.include_router(transactions_router)
 api_router.include_router(copilot_router)
 
 api_router.include_router(simulator_router)
+
+api_router.include_router(dashboard_router)
+api_router.include_router(read_api_router)
