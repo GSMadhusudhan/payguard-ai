@@ -537,23 +537,89 @@ def get_investigation(
         else {}
     )
 
-    evidence = (
-        item.evidence
-        if isinstance(
-            item.evidence,
-            list,
+    raw_evidence = item.evidence
+
+    if isinstance(raw_evidence, list):
+        evidence = raw_evidence
+    elif isinstance(raw_evidence, dict):
+        nested_evidence = raw_evidence.get(
+            "evidence",
+            [],
         )
-        else []
+
+        evidence = (
+            nested_evidence
+            if isinstance(
+                nested_evidence,
+                list,
+            )
+            else []
+        )
+    else:
+        evidence = []
+
+    raw_uncertainty = item.uncertainty
+
+    if isinstance(raw_uncertainty, list):
+        uncertainties = raw_uncertainty
+        alternative_explanations = []
+    elif isinstance(raw_uncertainty, dict):
+        raw_items = raw_uncertainty.get(
+            "items",
+            [],
+        )
+
+        uncertainties = (
+            raw_items
+            if isinstance(raw_items, list)
+            else []
+        )
+
+        raw_alternatives = (
+            raw_uncertainty.get(
+                "alternative_explanations",
+                [],
+            )
+        )
+
+        alternative_explanations = (
+            raw_alternatives
+            if isinstance(
+                raw_alternatives,
+                list,
+            )
+            else []
+        )
+    else:
+        uncertainties = []
+        alternative_explanations = []
+
+    # Support older investigation records where
+    # alternative explanations were stored in findings.
+    if not alternative_explanations:
+        findings_alternatives = findings.get(
+            "alternative_explanations",
+            [],
+        )
+
+        if isinstance(
+            findings_alternatives,
+            list,
+        ):
+            alternative_explanations = (
+                findings_alternatives
+            )
+
+    recommended_next_checks = findings.get(
+        "recommended_next_checks",
+        [],
     )
 
-    uncertainty = (
-        item.uncertainty
-        if isinstance(
-            item.uncertainty,
-            list,
-        )
-        else []
-    )
+    if not isinstance(
+        recommended_next_checks,
+        list,
+    ):
+        recommended_next_checks = []
 
     return InvestigationDetail(
         id=item.id,
@@ -566,17 +632,11 @@ def get_investigation(
         ),
         evidence=evidence,
         alternative_explanations=(
-            findings.get(
-                "alternative_explanations",
-                [],
-            )
+            alternative_explanations
         ),
-        uncertainties=uncertainty,
+        uncertainties=uncertainties,
         recommended_next_checks=(
-            findings.get(
-                "recommended_next_checks",
-                [],
-            )
+            recommended_next_checks
         ),
         provider=_provider(item),
         model_name=_model_name(item),
