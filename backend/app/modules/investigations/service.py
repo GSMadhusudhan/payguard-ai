@@ -9,6 +9,7 @@ from app.modules.ai.investigation.service import (
     PROMPT_VERSION,
     run_ai_investigation,
 )
+from app.modules.recommendations.service import generate_recommendation
 
 
 def investigate_incident(
@@ -25,6 +26,12 @@ def investigate_incident(
     )
 
     if existing is not None:
+        generate_recommendation(
+            db,
+            incident=incident,
+            investigation=existing,
+        )
+        db.commit()
         return existing
 
     incident.status = "INVESTIGATING"
@@ -62,8 +69,15 @@ def investigate_incident(
     )
 
     db.add(investigation)
+    db.flush()
 
     incident.status = "INVESTIGATED"
+
+    generate_recommendation(
+        db,
+        incident=incident,
+        investigation=investigation,
+    )
 
     db.commit()
     db.refresh(investigation)
