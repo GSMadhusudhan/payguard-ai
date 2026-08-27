@@ -5,7 +5,7 @@ echo "Running PayGuard database migrations..."
 alembic upgrade head
 
 echo "Preparing PayGuard demo account..."
-python scripts/bootstrap_demo.py
+python -m scripts.bootstrap_demo
 
 echo "Starting PayGuard API..."
 exec uvicorn app.main:app \
