@@ -4,1875 +4,442 @@
 
 **Razorpay Buildathon — Track 2: AI Risk Manager**
 
-PayGuard AI is an intelligent payment-risk monitoring and investigation platform that continuously observes transaction activity, detects abnormal behavior, correlates related signals into incidents, estimates financial exposure, investigates likely root causes using AI, and recommends controlled mitigation actions.
-
-Instead of simply telling payment teams that something failed, PayGuard helps answer:
-
-* What went wrong?
-* How serious is it?
-* Is this fraud, customer behavior, merchant integration failure, or provider degradation?
-* How much money is currently at risk?
-* What evidence supports the conclusion?
-* What should the team do next?
+[Live Demo](https://payguard-web-cwm6.onrender.com) · [API](https://payguard-api-ettn.onrender.com) · [Swagger Docs](https://payguard-api-ettn.onrender.com/docs)
 
 ---
 
-# 1. The Problem
+## What is PayGuard AI?
 
-Modern payment systems process thousands of transactions across:
+PayGuard AI is a payment-risk monitoring and investigation platform that helps payment teams move from:
 
-* UPI
-* Cards
-* Wallets
-* Net banking
-* Banks
-* Payment providers
-* Merchants
-* Customers
-* Devices
+**“Something is failing.”**
 
-Traditional monitoring systems often rely on:
+to:
 
-```text
-Static Thresholds
-+
-Dashboards
-+
-Alerts
-+
-Manual Investigation
-```
+**“Here is what is failing, why it is happening, how much revenue is exposed, what evidence supports the conclusion, and what controlled action should be taken.”**
 
-An operations team may know that:
+PayGuard continuously:
 
-```text
-UPI failure rate increased to 28%
-```
-
-but still need to manually determine:
-
-```text
-Why?
-
-Which provider is responsible?
-
-Is this fraud?
-
-How many merchants are affected?
-
-What is the financial impact?
-
-What action should be taken?
-```
-
-This creates delayed response and unnecessary revenue loss.
+- monitors payment activity,
+- scores transaction risk,
+- detects abnormal failure patterns,
+- correlates related signals into incidents,
+- calculates financial exposure,
+- performs evidence-grounded AI investigations,
+- recommends mitigation,
+- requires human approval for sensitive actions,
+- provides a grounded AI Risk Copilot.
 
 ---
 
-# 2. The Solution
+## The Problem
 
-PayGuard AI introduces an intelligent risk-management layer for digital payments.
+Payment operations teams often rely on dashboards, static alerts, and manual investigation.
 
-Core flow:
-
-```text
-PAYMENT ACTIVITY
-       ↓
-RISK DETECTION
-       ↓
-ANOMALY ANALYSIS
-       ↓
-INCIDENT CORRELATION
-       ↓
-FINANCIAL IMPACT
-       ↓
-AI INVESTIGATION
-       ↓
-RECOMMENDATION
-       ↓
-HUMAN-CONTROLLED ACTION
-       ↓
-RECOVERY MONITORING
-```
-
-PayGuard combines:
+An alert such as:
 
 ```text
-Deterministic Risk Rules
-+
-Statistical Anomaly Detection
-+
-Historical Baselines
-+
-Incident Correlation
-+
-Evidence-Grounded AI
+UPI failure rate increased to 30%
 ```
+
+still leaves critical questions unanswered:
+
+- Which bank or payment rail is responsible?
+- Is this actually abnormal compared with historical behavior?
+- How many transactions are affected?
+- How much revenue is currently at risk?
+- What evidence supports the suspected root cause?
+- What action should the operations team take?
+
+PayGuard brings these steps into one risk command center.
 
 ---
 
-# 3. Key Principle
+## Primary Demo Scenario
 
-The LLM is **not** the source of truth.
-
-PayGuard follows:
+The Buildathon demo simulates a realistic payment degradation:
 
 ```text
-Transaction Data
-       ↓
+Normal UPI traffic
+        ↓
+ABC Bank failures increase
+        ↓
+Historical baseline: 5%
+Current failure rate: 30%
+        ↓
+6 of 20 affected transactions fail
+        ↓
+CRITICAL operational incident
+        ↓
+₹4.28L deterministic revenue exposure
+        ↓
+Evidence-grounded AI investigation
+        ↓
+Human-approved recommendation
+        ↓
+SIMULATED mitigation
+        ↓
+AI Risk Copilot explanation
+```
+
+Other payment traffic remains comparatively healthy, allowing PayGuard to isolate the anomaly to **ABC Bank UPI traffic**.
+
+---
+
+## Live Demo Results
+
+| Signal | Result |
+|---|---:|
+| Transactions | 100 |
+| Successful payments | 91 |
+| Failed payments | 9 |
+| ABC Bank UPI baseline failure rate | 5.0% |
+| ABC Bank UPI current failure rate | 30.0% |
+| Affected transactions | 20 |
+| Failed affected transactions | 6 |
+| Incident severity | CRITICAL |
+| Revenue at risk | ₹4.28L |
+| AI investigation confidence | 90% |
+| Recommended mitigation | Reroute affected UPI traffic |
+| Execution mode | SIMULATED |
+
+---
+
+## Core Product Flow
+
+```text
+Transactions
+    ↓
 Deterministic Risk Engine
-       ↓
-Structured Evidence
-       ↓
-AI Investigation
-```
-
-Not:
-
-```text
-Transaction
-   ↓
-LLM
-   ↓
-Random Risk Score
-```
-
-Official risk scores, transaction facts, incident metrics, and financial-impact calculations are generated by backend logic.
-
-AI is used to:
-
-* Investigate
-* Explain
-* Summarize
-* Compare hypotheses
-* Communicate uncertainty
-* Recommend next actions
-
----
-
-# 4. Core Features
-
-## Real-Time Transaction Monitoring
-
-PayGuard monitors normalized payment events from:
-
-* Razorpay Test Mode
-* Transaction Simulator
-* Manual API ingestion
-
-Supported payment information includes:
-
-* Amount
-* Currency
-* Payment method
-* Bank/provider
-* Transaction status
-* Failure reason
-* Merchant
-* Customer
-* Device context
-* Time and location signals
-
----
-
-## Explainable Risk Scoring
-
-Every transaction receives a risk score:
-
-```text
-0 – 100
-```
-
-Risk levels:
-
-|  Score | Risk     |
-| -----: | -------- |
-|   0–29 | LOW      |
-|  30–59 | MEDIUM   |
-|  60–79 | HIGH     |
-| 80–100 | CRITICAL |
-
-The score is composed of:
-
-```text
-Rule Score        ≤ 70
-
-Anomaly Score     ≤ 20
-
-Contextual Score  ≤ 10
-```
-
----
-
-## Deterministic Risk Rules
-
-Initial risk signals include:
-
-```text
-HIGH_AMOUNT
-
-EXTREME_AMOUNT
-
-HIGH_VELOCITY
-
-EXTREME_VELOCITY
-
-REPEATED_FAILURES
-
-NEW_DEVICE
-
-DEVICE_MULTI_CUSTOMER
-
-NEW_LOCATION
-
-RAPID_LOCATION_CHANGE
-
-CUSTOMER_RISK_HISTORY
-
-BANK_FAILURE_SPIKE
-
-PAYMENT_METHOD_FAILURE_SPIKE
-
-MERCHANT_FAILURE_SPIKE
-
-REFUND_PATTERN
-
-DUPLICATE_PAYMENT_PATTERN
-```
-
-Each risk factor includes:
-
-```text
-Reason
-+
-Score Contribution
-+
-Evidence
-```
-
----
-
-# 5. Statistical Anomaly Detection
-
-PayGuard compares current payment activity against historical behavior.
-
-Initial methods include:
-
-* Rolling averages
-* Rolling failure rates
-* Percentage deviation
-* Ratio-to-baseline
-* Velocity analysis
-* Z-score
-* Statistical outlier detection
-
-Example:
-
-```text
-ABC Bank UPI Failure Rate
-
-Current:
-28.4%
-
-Historical:
-5.1%
-
-Deviation:
-5.56x
-```
-
-This becomes a structured anomaly signal.
-
----
-
-# 6. Incident Intelligence
-
-PayGuard does not create hundreds of alerts for hundreds of related failures.
-
-Instead:
-
-```text
-342 related UPI failures
-```
-
-can become:
-
-```text
-1 Critical Incident
-```
-
-Example:
-
-```text
-PG-2026-000042
-
-UPI Failure Spike Associated with ABC Bank
-
-Severity:
-CRITICAL
-
-Affected Transactions:
-342
-
-Revenue at Risk:
-₹4.28L
-```
-
-Incident lifecycle:
-
-```text
-DETECTED
-   ↓
-INVESTIGATING
-   ↓
-ACTION_RECOMMENDED
-   ↓
-MONITORING
-   ↓
-RESOLVED
-```
-
-Possible escalation:
-
-```text
-ESCALATED
-```
-
----
-
-# 7. AI Investigation
-
-Once deterministic evidence identifies an incident, PayGuard can trigger AI investigation.
-
-Example:
-
-```text
-AI INVESTIGATION
-
-Likely Root Cause
-
-Possible ABC Bank-associated UPI degradation
-
-Confidence
-
-91%
-```
-
-Evidence:
-
-```text
-• UPI failure rate increased from 5.1% to 28.4%.
-
-• ABC Bank accounts for approximately 81% of failed UPI transactions.
-
-• Card payment performance remains near baseline.
-
-• Merchant API health remains normal.
-```
-
-Uncertainty:
-
-```text
-No direct external provider outage confirmation is currently available.
-```
-
-The AI is explicitly required to distinguish:
-
-```text
-Facts
-```
-
-from:
-
-```text
-Hypotheses
-```
-
----
-
-# 8. Revenue at Risk
-
-Technical incidents are converted into business impact.
-
-Example:
-
-```text
-Affected Payment Value
-₹5.10L
-
-Estimated Revenue at Risk
-₹4.28L
-```
-
-Revenue-at-risk is calculated by deterministic backend logic.
-
-The AI may explain the result but cannot independently invent the amount.
-
----
-
-# 9. AI Risk Copilot
-
-PayGuard includes a conversational risk-analysis interface.
-
-Users can ask:
-
-```text
-Why are UPI payments failing?
-```
-
-```text
-Which provider currently has the highest failure rate?
-```
-
-```text
-How much revenue is at risk?
-```
-
-```text
-Show critical incidents from the last hour.
-```
-
-```text
-Why is transaction pay_demo_001 critical?
-```
-
-The Copilot follows:
-
-```text
-User Question
-      ↓
-Intent Detection
-      ↓
-Authorization
-      ↓
-PayGuard Data Retrieval
-      ↓
-Structured AI Context
-      ↓
-AI
-      ↓
-Validated Answer + Evidence
-```
-
-It does not answer operational payment questions purely from general model knowledge.
-
----
-
-# 10. Recommendations & Human Approval
-
-PayGuard may automatically perform safe operations such as:
-
-* Create incidents
-* Generate alerts
-* Investigate incidents
-* Generate reports
-* Increase monitoring
-* Recommend mitigation
-
-Sensitive actions remain human-controlled.
-
-Examples:
-
-* Blocking accounts
-* Freezing merchants
-* Modifying transaction limits
-* Disabling payment methods
-* Changing routing
-* Applying rate limits
-
-Flow:
-
-```text
-AI Recommendation
-       ↓
-Validation
-       ↓
-Approval Required?
-       ↓
-Human Review
-       ↓
-Action Executor
-       ↓
-Audit Log
-```
-
-High-impact actions are executed in:
-
-```text
-SIMULATED
-```
-
-mode during the Buildathon demo.
-
----
-
-# 11. Transaction Simulator
-
-A deterministic simulator is included so PayGuard can demonstrate risk scenarios reliably.
-
-Planned scenarios:
-
-```text
-Normal Traffic
-
-UPI Bank Degradation
-
-Velocity Attack
-
-Shared Device Abuse
-
-Duplicate Payments
-
-Refund Spike
-```
-
-The simulator does **not** fake dashboard statistics.
-
-Generated transactions use the real pipeline:
-
-```text
-Simulator
-   ↓
-Transaction Ingestion
-   ↓
-Risk Engine
-   ↓
+    ↓
 Anomaly Detection
-   ↓
+    ↓
 Incident Correlation
+    ↓
+Revenue-at-Risk Calculation
+    ↓
+Evidence-Grounded AI Investigation
+    ↓
+Recommendation
+    ↓
+Human Approval
+    ↓
+Simulated Execution
+    ↓
+AI Risk Copilot
+```
+
+---
+
+## Key Features
+
+### Risk Command Center
+
+The live dashboard surfaces:
+
+- payment health,
+- transaction volume,
+- failures,
+- active incidents,
+- financial exposure,
+- risk distribution,
+- payment-method performance.
+
+### Explainable Risk Engine
+
+Each transaction receives a deterministic backend risk score using explicit rules and anomaly signals.
+
+Official risk values are **not generated by an LLM**.
+
+### Incident Intelligence
+
+PayGuard correlates failures into operational incidents using:
+
+- historical baselines,
+- current-window failure rates,
+- payment method,
+- bank/provider concentration,
+- affected transaction counts.
+
+### Deterministic Revenue at Risk
+
+Financial exposure is computed from backend transaction data.
+
+For the primary demo:
+
+```text
+Revenue at Risk = ₹4.28L
+```
+
+The AI does not invent or modify this value.
+
+### Evidence-Grounded AI Investigation
+
+The investigation layer receives structured evidence from PayGuard and produces:
+
+- incident summary,
+- likely root cause,
+- confidence,
+- supporting evidence,
+- uncertainty,
+- alternative explanations,
+- recommended next checks.
+
+### Human-Controlled Mitigation
+
+Sensitive actions cannot execute autonomously.
+
+```text
+PROPOSED
    ↓
-AI Investigation
-```
-
----
-
-# 12. Primary Buildathon Demo
-
-The main demonstration uses:
-
-```text
-UPI Bank Degradation
-```
-
-Normal state:
-
-```text
-UPI failure rate:
-3–5%
-
-Payment Health:
-Healthy
-
-Critical Incidents:
-0
-```
-
-The simulator then introduces elevated failures for fictional:
-
-```text
-ABC Bank
-```
-
-Expected state:
-
-```text
-UPI failure rate:
-~28%
-
-Payment Health:
-Degraded
-
-Critical Incidents:
-1
-
-Revenue at Risk:
-Elevated
-```
-
-PayGuard then:
-
-```text
-Detects the anomaly
-        ↓
-Creates an incident
-        ↓
-Calculates exposure
-        ↓
-Investigates using AI
-        ↓
-Explains evidence
-        ↓
-Generates mitigation advice
-```
-
----
-
-# 13. Razorpay Integration
-
-PayGuard is designed to ingest Razorpay Test Mode payment events.
-
-Webhook flow:
-
-```text
-Razorpay
+PENDING HUMAN APPROVAL
    ↓
-Signed Webhook
+APPROVED
    ↓
-Signature Verification
-   ↓
-Idempotency Check
-   ↓
-Event Persistence
-   ↓
-Normalization
-   ↓
-PayGuard Transaction Pipeline
+SIMULATED EXECUTION
 ```
 
-Planned endpoint:
+The Buildathon demo **does not change live payment routing**.
+
+### AI Risk Copilot
+
+Operators can ask:
 
 ```text
-POST /api/v1/webhooks/razorpay
+Why are my UPI payments failing?
+How much revenue is at risk?
+Which bank is causing the failures?
+What should we do next?
 ```
 
-Webhook verification uses:
+Copilot retrieves PayGuard evidence before answering.
 
-```text
-X-Razorpay-Signature
-```
-
-and the original raw request body.
-
-Duplicate events must not create duplicate financial state.
+If relevant evidence does not exist, it returns an insufficient-data response instead of fabricating operational facts.
 
 ---
 
-# 14. Architecture
+## AI Safety Architecture
 
-High-level architecture:
+A central design principle is:
+
+> **AI explains risk. Deterministic systems own risk.**
 
 ```text
-                Razorpay / Simulator
-                         │
-                         ↓
-                Transaction Ingestion
-                         │
-                         ↓
-              Validation & Normalization
-                         │
-                         ↓
-                    PostgreSQL
-                         │
-                         ↓
-                 Feature Extraction
-                         │
-              ┌──────────┴──────────┐
-              ↓                     ↓
-         Rule Engine          Anomaly Engine
-              │                     │
-              └──────────┬──────────┘
-                         ↓
-                  Risk Scoring
-                         ↓
-                Risk Classification
-                         ↓
-               Incident Correlation
-                         ↓
-                 Incident Manager
-                         ↓
-                Revenue at Risk
-                         ↓
-                 AI Investigation
-                         ↓
-                 Recommendation
-                         ↓
-                  Human Approval
-                         ↓
-                     Actions
-                         ↓
-             Dashboard / AI Copilot
+Payment Data
+     ↓
+Deterministic Backend
+     ↓
+Official Risk / Incident / Financial Values
+     ↓
+Structured Evidence
+     ↓
+AI Investigation + Explanation
 ```
+
+The AI cannot authoritatively change:
+
+- transaction facts,
+- official risk scores,
+- incident severity,
+- revenue-at-risk calculations,
+- approval status,
+- production payment routing.
 
 ---
 
-# 15. Architecture Philosophy
+## Technology Stack
 
-PayGuard begins as a:
+### Frontend
+- React
+- TypeScript
+- Vite
+- React Router
+- Recharts
+- Lucide React
 
-```text
-Modular Monolith
-```
+### Backend
+- Python 3.12
+- FastAPI
+- SQLAlchemy 2
+- Pydantic
+- JWT authentication
+- Alembic migrations
 
-rather than unnecessary microservices.
+### Database
+- PostgreSQL
+- JSONB investigation evidence and uncertainty
 
-Reasons:
-
-* Faster development
-* Easier testing
-* Easier deployment
-* Strong module boundaries
-* Lower operational complexity
-* Better hackathon reliability
-
-Modules can later be extracted into dedicated services if scale requires it.
-
----
-
-# 16. Technology Stack
-
-## Frontend
-
-```text
-React
-
-TypeScript
-
-Vite
-
-Tailwind CSS
-
-React Router
-
-TanStack Query
-
-Recharts
-
-Lucide React
-```
+### Infrastructure
+- Render Static Site
+- Render FastAPI Web Service
+- Render PostgreSQL
 
 ---
 
-## Backend
+## Production Deployment
 
-```text
-Python
+**Frontend:** https://payguard-web-cwm6.onrender.com
 
-FastAPI
+**Backend:** https://payguard-api-ettn.onrender.com
 
-Pydantic
+**Swagger:** https://payguard-api-ettn.onrender.com/docs
 
-SQLAlchemy
-
-Alembic
-
-Uvicorn
-```
+> The demo uses Render free infrastructure, so the backend can require a short cold start after inactivity.
 
 ---
 
-## Database
+## Demo Access
 
 ```text
-PostgreSQL
+Merchant workspace: demo-merchant
+Email: admin@payguard.example.com
+Password: provided privately with the submission
 ```
+
+Secrets, database credentials, JWT secrets, and deployment passwords are **not committed to the repository**.
 
 ---
 
-## AI
+## Automated Testing
 
-Provider abstraction through:
+PayGuard includes a regression suite covering the critical workflow.
 
-```text
-AI_PROVIDER
-
-AI_API_KEY
-
-AI_MODEL
+```bash
+cd backend
+venv/bin/python -m pytest -q
 ```
 
-No AI provider is hardcoded into the core architecture.
+Current result:
+
+```text
+5 passed
+```
+
+The suite validates:
+
+- bank degradation detection,
+- deterministic ₹4.28L exposure,
+- AI investigation generation,
+- human approval gating,
+- simulated execution,
+- Copilot grounding,
+- tenant isolation,
+- required API routes.
 
 ---
 
-## Payment Integration
+## Local Development
 
-```text
-Razorpay Test Mode
+### Backend
 
-Razorpay Webhooks
+```bash
+cd backend
+
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+alembic upgrade head
+uvicorn app.main:app --reload
 ```
+
+Backend: `http://127.0.0.1:8000`
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend: `http://localhost:5173`
 
 ---
 
-# 17. Project Structure
+## Security
+
+PayGuard implements:
+
+- JWT authentication,
+- merchant-scoped access,
+- role-based authorization,
+- human approval for controlled actions,
+- tenant-isolated read APIs,
+- idempotent payment ingestion,
+- simulation-only mitigation in the demo,
+- environment-variable based secret management.
+
+---
+
+## Repository Structure
 
 ```text
 payguard-ai/
-│
-├── README.md
-├── PRD.md
+├── backend/
+│   ├── alembic/
+│   ├── app/
+│   ├── scripts/
+│   └── tests/
+├── frontend/
+│   └── src/
+│       ├── components/
+│       ├── context/
+│       ├── lib/
+│       ├── pages/
+│       └── types/
+├── docs/
 ├── architecture.md
 ├── design.md
+├── PRD.md
 ├── rules.md
-├── phases.md
-├── memory.md
-│
-├── docs/
-│   ├── api-contract.md
-│   ├── database-schema.md
-│   ├── ai-system.md
-│   ├── risk-engine.md
-│   ├── security.md
-│   ├── testing.md
-│   ├── deployment.md
-│   └── demo-flow.md
-│
-├── backend/
-│
-├── frontend/
-│
-├── ai/
-│
-├── database/
-│
-└── scripts/
-```
-
----
-
-# 18. Planned Backend Structure
-
-```text
-backend/
-│
-├── app/
-│   ├── main.py
-│   ├── config.py
-│   ├── database.py
-│   ├── dependencies.py
-│   ├── enums.py
-│   ├── exceptions.py
-│   ├── middleware.py
-│   ├── logging_config.py
-│   ├── security.py
-│   │
-│   ├── core/
-│   ├── utils/
-│   │
-│   └── modules/
-│       ├── auth/
-│       ├── users/
-│       ├── merchants/
-│       ├── customers/
-│       ├── transactions/
-│       ├── webhooks/
-│       ├── risk/
-│       ├── incidents/
-│       ├── investigations/
-│       ├── recommendations/
-│       ├── alerts/
-│       ├── analytics/
-│       ├── copilot/
-│       ├── approvals/
-│       └── audit/
-│
-├── tests/
-├── alembic/
-├── requirements.txt
-├── alembic.ini
-├── .env.example
 └── README.md
 ```
 
 ---
 
-# 19. Planned Frontend Structure
+## Documentation
 
-```text
-frontend/
-│
-├── src/
-│   ├── app/
-│   ├── components/
-│   ├── features/
-│   ├── hooks/
-│   ├── pages/
-│   ├── router/
-│   ├── services/
-│   ├── store/
-│   ├── styles/
-│   ├── types/
-│   └── utils/
-│
-├── public/
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-└── .env.example
-```
+For deeper engineering details:
+
+- [`architecture.md`](architecture.md) — system architecture
+- [`design.md`](design.md) — product and UI design
+- [`PRD.md`](PRD.md) — product requirements
+- [`rules.md`](rules.md) — implementation and safety rules
+- [`docs/README_FULL.md`](docs/README_FULL.md) — complete technical README
 
 ---
 
-# 20. Main Application Routes
+## Demo Story in 30 Seconds
 
-```text
-/login
-
-/dashboard
-
-/transactions
-
-/transactions/:transactionId
-
-/incidents
-
-/incidents/:incidentId
-
-/risk
-
-/analytics
-
-/alerts
-
-/copilot
-
-/approvals
-
-/simulator
-
-/settings
-```
+> A merchant's UPI traffic begins failing. PayGuard detects that the failure rate for ABC Bank has increased from a historical 5% baseline to 30%. It correlates the failures into a CRITICAL incident, calculates ₹4.28L of revenue exposure, investigates the likely root cause using evidence-grounded AI, recommends temporarily rerouting affected traffic, requires human approval before execution, performs the action only in SIMULATED mode, and lets the operator interrogate the incident through an AI Risk Copilot.
 
 ---
 
-# 21. API
+## Why PayGuard?
 
-API base:
-
-```text
-/api/v1
-```
-
-Example endpoints:
+PayGuard combines:
 
 ```text
-POST /auth/login
-
-GET /dashboard
-
-POST /transactions
-
-GET /transactions
-
-GET /transactions/{id}
-
-GET /transactions/{id}/risk
-
-GET /incidents
-
-GET /incidents/{id}
-
-POST /incidents/{id}/investigate
-
-GET /alerts
-
-GET /analytics/risk
-
-POST /copilot/query
-
-GET /approvals
-
-POST /approvals/{id}/approve
-
-POST /webhooks/razorpay
-
-GET /simulator/scenarios
-
-POST /simulator/scenarios/{id}/run
+Detection
++ Diagnosis
++ Financial Impact
++ Explainability
++ Human-Controlled Response
 ```
 
-Full API specification:
-
-```text
-docs/api-contract.md
-```
+into one payment-risk workflow.
 
 ---
 
-# 22. Database
+## Buildathon Safety Note
 
-Core entities include:
+All mitigation execution demonstrated by PayGuard is **SIMULATED**.
 
-```text
-users
-
-merchants
-
-merchant_users
-
-customers
-
-transactions
-
-webhook_events
-
-risk_scores
-
-risk_factors
-
-risk_rules
-
-rule_executions
-
-anomaly_signals
-
-incidents
-
-incident_transactions
-
-incident_events
-
-investigations
-
-recommendations
-
-alerts
-
-approval_requests
-
-mitigation_actions
-
-audit_logs
-```
-
-Full schema:
-
-```text
-docs/database-schema.md
-```
+No real banking infrastructure, live merchant routing, or production payment-provider configuration is modified by the demo.
 
 ---
 
-# 23. Security
+## PayGuard AI
 
-Core security principles:
-
-```text
-JWT authentication
-
-Server-side authorization
-
-Merchant data isolation
-
-Password hashing
-
-Environment-based secrets
-
-Razorpay webhook verification
-
-Webhook idempotency
-
-PII minimization
-
-Structured AI context
-
-AI output validation
-
-Human approval for sensitive actions
-
-Audit logging
-```
-
-Full specification:
-
-```text
-docs/security.md
-```
-
----
-
-# 24. AI Safety Boundaries
-
-AI can:
-
-```text
-Investigate
-
-Explain
-
-Summarize
-
-Recommend
-
-Answer questions
-```
-
-AI cannot:
-
-```text
-Change payment facts
-
-Change official risk scores
-
-Invent financial values
-
-Declare fraud without evidence
-
-Reveal secrets
-
-Bypass authorization
-
-Directly execute sensitive financial actions
-```
-
----
-
-# 25. Explainability
-
-Every important risk decision should be traceable:
-
-```text
-PAYMENT
-   ↓
-TRANSACTION
-   ↓
-RISK SCORE
-   ↓
-RISK FACTORS
-   ↓
-ANOMALY SIGNALS
-   ↓
-INCIDENT
-   ↓
-AI INVESTIGATION
-   ↓
-RECOMMENDATION
-   ↓
-APPROVAL
-   ↓
-ACTION
-   ↓
-AUDIT LOG
-```
-
----
-
-# 26. Failure Isolation
-
-If the AI provider fails:
-
-```text
-Transaction Ingestion   ✅
-
-Risk Scoring            ✅
-
-Anomaly Detection       ✅
-
-Incident Creation       ✅
-
-Revenue at Risk         ✅
-
-Alerts                   ✅
-
-AI Investigation        ❌
-```
-
-The core payment-risk platform remains operational.
-
----
-
-# 27. Local Development
-
-Development environment:
-
-```text
-macOS
-
-zsh
-
-VS Code
-```
-
-Expected local services:
-
-```text
-Frontend
-http://localhost:5173
-
-Backend
-http://localhost:8000
-
-PostgreSQL
-localhost:5432
-```
-
----
-
-# 28. Backend Setup
-
-When backend implementation begins:
-
-```bash
-cd backend
-```
-
-If Conda base is active:
-
-```bash
-conda deactivate
-```
-
-Create virtual environment:
-
-```bash
-python3 -m venv venv
-```
-
-Activate:
-
-```bash
-source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
-python3 -m pip install -r requirements.txt
-```
-
----
-
-# 29. Backend Environment
-
-Create:
-
-```text
-backend/.env
-```
-
-from:
-
-```text
-backend/.env.example
-```
-
-Expected variables include:
-
-```text
-APP_ENV=
-
-DATABASE_URL=
-
-JWT_SECRET=
-
-FRONTEND_URL=
-
-AI_PROVIDER=
-AI_API_KEY=
-AI_MODEL=
-
-RAZORPAY_KEY_ID=
-RAZORPAY_KEY_SECRET=
-RAZORPAY_WEBHOOK_SECRET=
-```
-
-Never commit `.env`.
-
----
-
-# 30. Database Migrations
-
-Apply migrations:
-
-```bash
-alembic upgrade head
-```
-
-Migration history is controlled through Alembic.
-
-Do not manually alter deployed database schemas.
-
----
-
-# 31. Run Backend
-
-Development:
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Expected:
-
-```text
-http://localhost:8000
-```
-
-Swagger:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-# 32. Frontend Setup
-
-When frontend implementation begins:
-
-```bash
-cd frontend
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Run:
-
-```bash
-npm run dev
-```
-
-Expected:
-
-```text
-http://localhost:5173
-```
-
----
-
-# 33. Frontend Environment
-
-Example:
-
-```text
-VITE_API_BASE_URL=http://localhost:8000/api/v1
-
-VITE_APP_ENV=development
-```
-
-Never place private backend secrets in `VITE_*` variables.
-
----
-
-# 34. Testing
-
-Backend:
-
-```bash
-pytest
-```
-
-Major test areas:
-
-```text
-Risk rules
-
-Risk score boundaries
-
-Anomaly detection
-
-Transaction ingestion
-
-Incident correlation
-
-Revenue at risk
-
-Authentication
-
-Authorization
-
-Webhook signatures
-
-Webhook idempotency
-
-AI validation
-
-Approvals
-
-Simulator scenarios
-```
-
-Full strategy:
-
-```text
-docs/testing.md
-```
-
----
-
-# 35. Primary Testing Principle
-
-PayGuard must be tested not only when everything works, but also when:
-
-```text
-Data is missing
-
-Payment events are duplicated
-
-A user is unauthorized
-
-AI is unavailable
-
-An AI response is malformed
-
-A webhook signature is invalid
-
-Multiple transactions arrive simultaneously
-
-A sensitive action is attempted without approval
-```
-
----
-
-# 36. Development Roadmap
-
-Implementation phases are documented in:
-
-```text
-phases.md
-```
-
-High-level progression:
-
-```text
-Documentation
-   ↓
-Repository Setup
-   ↓
-FastAPI
-   ↓
-PostgreSQL
-   ↓
-Authentication
-   ↓
-Transactions
-   ↓
-Risk Features
-   ↓
-Risk Rules
-   ↓
-Anomaly Detection
-   ↓
-Incidents
-   ↓
-Revenue at Risk
-   ↓
-AI Investigation
-   ↓
-Recommendations
-   ↓
-Simulator
-   ↓
-React UI
-   ↓
-Copilot
-   ↓
-Razorpay
-   ↓
-Security
-   ↓
-Testing
-   ↓
-Deployment
-   ↓
-Buildathon Demo
-```
-
----
-
-# 37. Current Project Status
-
-Current stage:
-
-```text
-Phase 0 — Product Specification
-```
-
-Architecture and documentation are being completed before implementation begins.
-
-After documentation is finalized, development starts with:
-
-```text
-Phase 1
-Repository & Development Foundation
-```
-
-followed by:
-
-```text
-Phase 2
-FastAPI Backend Foundation
-```
-
----
-
-# 38. Development Priority
-
-P0 — Mandatory:
-
-```text
-Transaction ingestion
-
-Risk Engine
-
-Risk factors
-
-Anomaly detection
-
-Incident correlation
-
-Revenue at risk
-
-AI investigation
-
-Simulator
-
-Dashboard
-
-Incident detail
-```
-
-P1 — Strongly Desired:
-
-```text
-Alerts
-
-Analytics
-
-AI Copilot
-
-Recommendations
-
-Approval simulation
-
-Razorpay webhooks
-
-Transaction Explorer
-```
-
-P2 — Future Enhancement:
-
-```text
-Advanced fraud graph
-
-Multi-agent investigation
-
-Complex notification system
-
-Streaming architecture
-
-Merchant-specific ML models
-
-WebSockets
-
-Fine-grained risk configuration
-```
-
----
-
-# 39. Design
-
-PayGuard uses a:
-
-```text
-Dark Fintech Operations Interface
-```
-
-Design goals:
-
-```text
-Trust
-
-Intelligence
-
-Control
-
-Speed
-
-Financial Seriousness
-```
-
-The interface prioritizes:
-
-* Clear information hierarchy
-* Controlled semantic risk colors
-* Explainable AI
-* Financial metrics
-* Operational timelines
-* Premium dark UI
-* Evidence over decoration
-
-Full design specification:
-
-```text
-design.md
-```
-
----
-
-# 40. Buildathon Demo Flow
-
-Primary demo:
-
-```text
-Healthy Dashboard
-        ↓
-Run UPI Bank Degradation
-        ↓
-Failure Rate Spike
-        ↓
-Critical Incident
-        ↓
-Risk Evidence
-        ↓
-Revenue at Risk
-        ↓
-AI Investigation
-        ↓
-Recommendation
-        ↓
-AI Risk Copilot
-```
-
-Full demo:
-
-```text
-docs/demo-flow.md
-```
-
----
-
-# 41. Demo Safety
-
-Synthetic payment incidents use fictional providers such as:
-
-```text
-ABC Bank
-XYZ Bank
-```
-
-PayGuard never claims synthetic incidents are real provider outages.
-
-The application should visibly display:
-
-```text
-TEST MODE
-```
-
-or:
-
-```text
-DEMO MODE
-```
-
-while simulated traffic is running.
-
----
-
-# 42. Demo Reliability
-
-The primary:
-
-```text
-UPI Bank Degradation
-```
-
-scenario must succeed:
-
-```text
-3 consecutive times
-```
-
-before the project is considered Buildathon-ready.
-
----
-
-# 43. Documentation
-
-Project documentation:
-
-```text
-PRD.md
-```
-
-Product requirements.
-
-```text
-architecture.md
-```
-
-System architecture.
-
-```text
-design.md
-```
-
-UI/UX design system.
-
-```text
-rules.md
-```
-
-Engineering rules.
-
-```text
-phases.md
-```
-
-Implementation roadmap.
-
-```text
-docs/database-schema.md
-```
-
-Database model.
-
-```text
-docs/risk-engine.md
-```
-
-Risk scoring specification.
-
-```text
-docs/ai-system.md
-```
-
-AI architecture and boundaries.
-
-```text
-docs/api-contract.md
-```
-
-REST API contract.
-
-```text
-docs/security.md
-```
-
-Security architecture.
-
-```text
-docs/testing.md
-```
-
-Testing strategy.
-
-```text
-docs/deployment.md
-```
-
-Deployment architecture.
-
-```text
-docs/demo-flow.md
-```
-
-Buildathon demo flow.
-
----
-
-# 44. Engineering Principles
-
-PayGuard development prioritizes:
-
-```text
-Correctness
-+
-Explainability
-+
-Security
-+
-Traceability
-+
-Reliability
-+
-Clarity
-```
-
-before unnecessary technical complexity.
-
----
-
-# 45. What PayGuard Is Not
-
-PayGuard is not:
-
-```text
-A generic fraud classifier
-
-A chatbot around payment data
-
-A random AI risk-score generator
-
-A dashboard with hardcoded metrics
-
-A system where AI directly controls financial actions
-```
-
-It is an:
-
-```text
-AI-assisted payment risk investigation and incident-management platform.
-```
-
----
-
-# 46. Future Improvements
-
-Potential future capabilities:
-
-* Fraud relationship graph
-* Behavioral customer profiling
-* Adaptive merchant-specific thresholds
-* Historical incident similarity
-* Provider-status correlation
-* Advanced machine-learning anomaly models
-* Incident forecasting
-* Analyst feedback loop
-* Real-time streaming architecture
-* Automated incident reports
-* Multi-agent investigation
-* WebSocket/SSE updates
-* Fine-grained RBAC
-* Enterprise SSO
-* Advanced observability
-
----
-
-# 47. Project Vision
-
-The long-term vision is:
-
-```text
-OBSERVE
-   ↓
-DETECT
-   ↓
-UNDERSTAND
-   ↓
-INVESTIGATE
-   ↓
-QUANTIFY
-   ↓
-RECOMMEND
-   ↓
-ACT SAFELY
-   ↓
-LEARN
-```
-
-PayGuard AI aims to transform payment-risk operations from reactive monitoring into proactive, explainable, AI-assisted decision making.
-
----
-
-# 48. Final Product Statement
-
-> **PayGuard AI does not simply tell payment teams that something went wrong. It helps them understand what changed, why it may be happening, how much money is affected, what evidence supports the conclusion, and what action should happen next.**
-
----
-
-## Razorpay Buildathon
-
-```text
-Track 2 — AI Risk Manager
-```
-
-### PayGuard AI
-
-```text
-Autonomous AI Risk Manager for Digital Payments
-```
+**Detect earlier. Investigate faster. Protect revenue intelligently.**
