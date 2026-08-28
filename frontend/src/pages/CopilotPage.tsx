@@ -21,6 +21,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { LayerTag } from "../components/ui/LayerTag";
 import {
   ApiError,
   apiRequest,
@@ -29,7 +30,6 @@ import type {
   CopilotEvidence,
   CopilotResponse,
 } from "../types/api";
-
 
 interface ChatMessage {
   id: string;
@@ -42,30 +42,34 @@ interface ChatMessage {
   generatedAt?: string;
 }
 
-
 const suggestions = [
   {
     icon: AlertTriangle,
     title: "Investigate UPI failures",
     question: "Why are my UPI payments failing?",
+    eyebrow: "Payment method",
   },
   {
     icon: CircleDollarSign,
     title: "Financial exposure",
     question: "How much revenue is at risk?",
+    eyebrow: "Revenue",
   },
   {
     icon: Building2,
     title: "Bank analysis",
-    question: "Which bank is causing the most failures?",
+    question:
+      "Which bank is causing the most failures?",
+    eyebrow: "Provider",
   },
   {
     icon: ShieldCheck,
     title: "Response guidance",
-    question: "What should we do about the current payment incident?",
+    question:
+      "What should we do about the current payment incident?",
+    eyebrow: "Response",
   },
 ];
-
 
 export function CopilotPage() {
   const navigate = useNavigate();
@@ -188,69 +192,68 @@ export function CopilotPage() {
   }
 
   return (
-    <div className="copilot-layout">
-      <section className="copilot-main">
-        <div className="copilot-hero">
+    <div className="copilot-layout copilot-v3">
+      <section className="copilot-main copilot-main-v3">
+        <section className="copilot-hero copilot-hero-v3">
           <div className="copilot-brand-orb">
-            <Bot size={24} />
+            <Bot size={23} />
           </div>
 
-          <div>
+          <div className="copilot-hero-copy-v3">
             <div className="copilot-kicker">
-              <Sparkles size={13} />
+              <Sparkles size={12} />
               GROUNDED PAYMENT INTELLIGENCE
             </div>
 
             <h2>
-              Ask PayGuard about your
-              <br />
-              payment risk.
+              Investigate payment risk
+              using actual PayGuard evidence.
             </h2>
 
             <p>
               Copilot retrieves merchant-scoped
-              PayGuard evidence before answering.
-              It does not guess operational facts
-              from general model knowledge.
+              operational evidence before producing
+              an interpretation. It cannot author
+              official payment facts or execute
+              mitigation.
             </p>
           </div>
 
-          <div className="copilot-security">
-            <ShieldCheck size={15} />
+          <div className="copilot-hero-layer-v3">
+            <LayerTag
+              variant="ai"
+              label="Evidence grounded"
+            />
 
-            <div>
-              <strong>
-                Evidence grounded
-              </strong>
-
-              <span>
-                Read-only AI access
-              </span>
-            </div>
+            <span>
+              Read-only AI access
+            </span>
           </div>
-        </div>
+        </section>
 
-        <div className="copilot-chat">
+        <div className="copilot-chat copilot-chat-v3">
           {messages.length === 0 ? (
-            <div className="copilot-empty">
+            <div className="copilot-empty copilot-empty-v3">
               <div className="copilot-empty-head">
                 <div>
                   <span className="panel-eyebrow">
-                    START AN INVESTIGATION
+                    SUGGESTED INVESTIGATIONS
                   </span>
 
                   <h3>
-                    What do you want to know?
+                    Start with a payment-risk
+                    question
                   </h3>
 
                   <p>
-                    Try one of these questions using
-                    the current PayGuard dataset.
+                    Each answer is grounded in the
+                    currently available PayGuard
+                    dataset.
                   </p>
                 </div>
               </div>
 
-              <div className="copilot-suggestions">
+              <div className="copilot-suggestions copilot-suggestions-v3">
                 {suggestions.map(
                   (suggestion) => {
                     const Icon =
@@ -262,6 +265,7 @@ export function CopilotPage() {
                         key={
                           suggestion.question
                         }
+                        disabled={loading}
                         onClick={() =>
                           void askCopilot(
                             suggestion.question,
@@ -272,7 +276,13 @@ export function CopilotPage() {
                           <Icon size={16} />
                         </div>
 
-                        <div>
+                        <div className="suggestion-copy-v3">
+                          <small>
+                            {
+                              suggestion.eyebrow
+                            }
+                          </small>
+
                           <strong>
                             {
                               suggestion.title
@@ -296,7 +306,7 @@ export function CopilotPage() {
               </div>
             </div>
           ) : (
-            <div className="copilot-messages">
+            <div className="copilot-messages copilot-messages-v3">
               {messages.map((message) => (
                 <ChatMessageCard
                   key={message.id}
@@ -314,7 +324,7 @@ export function CopilotPage() {
               ))}
 
               {loading && (
-                <div className="copilot-assistant-message loading">
+                <div className="copilot-assistant-message copilot-assistant-v3 loading">
                   <div className="assistant-avatar">
                     <Bot size={15} />
                   </div>
@@ -327,8 +337,8 @@ export function CopilotPage() {
                     </div>
 
                     <small>
-                      Retrieving PayGuard
-                      evidence...
+                      Retrieving merchant-scoped
+                      PayGuard evidence...
                     </small>
                   </div>
                 </div>
@@ -340,14 +350,14 @@ export function CopilotPage() {
         </div>
 
         {error && (
-          <div className="copilot-error">
+          <div className="copilot-error copilot-error-v3">
             <AlertTriangle size={14} />
             {error}
           </div>
         )}
 
         <form
-          className="copilot-composer"
+          className="copilot-composer copilot-composer-v3"
           onSubmit={submit}
         >
           <div className="composer-icon">
@@ -381,6 +391,7 @@ export function CopilotPage() {
 
           <button
             type="submit"
+            className="pg-primary-action"
             disabled={
               !question.trim() ||
               loading
@@ -391,16 +402,17 @@ export function CopilotPage() {
           </button>
         </form>
 
-        <div className="copilot-footer-note">
+        <div className="copilot-footer-note copilot-footer-note-v3">
           <ShieldCheck size={12} />
 
-          Copilot can explain and recommend.
-          It cannot modify payment facts,
-          risk scores or execute mitigation.
+          AI can explain and recommend. Payment
+          facts, risk scores, financial exposure
+          and execution authority remain outside
+          Copilot.
         </div>
       </section>
 
-      <aside className="copilot-context-panel">
+      <aside className="copilot-context-panel copilot-context-v3">
         <div className="context-panel-header">
           <Database size={16} />
 
@@ -415,7 +427,12 @@ export function CopilotPage() {
           </div>
         </div>
 
-        <div className="context-status-card">
+        <LayerTag
+          variant="deterministic"
+          label="Backend evidence"
+        />
+
+        <div className="context-status-card context-status-v3">
           <span className="context-live-dot" />
 
           <div>
@@ -464,14 +481,14 @@ export function CopilotPage() {
             SAFETY
           </span>
 
-          <div className="copilot-safety-card">
+          <div className="copilot-safety-card copilot-safety-v3">
             <ShieldCheck size={15} />
 
             <p>
-              If relevant PayGuard data does not
-              exist, Copilot returns an
-              insufficient-data response instead
-              of inventing an explanation.
+              If relevant PayGuard evidence does
+              not exist, Copilot returns an
+              insufficient-data response rather
+              than inventing an operational fact.
             </p>
           </div>
         </div>
@@ -495,7 +512,6 @@ export function CopilotPage() {
   );
 }
 
-
 function ChatMessageCard({
   message,
   onOpenIncident,
@@ -505,7 +521,7 @@ function ChatMessageCard({
 }) {
   if (message.role === "user") {
     return (
-      <div className="copilot-user-message">
+      <div className="copilot-user-message copilot-user-v3">
         <div className="user-message-bubble">
           {message.content}
         </div>
@@ -518,63 +534,103 @@ function ChatMessageCard({
   }
 
   return (
-    <div className="copilot-assistant-message">
+    <div className="copilot-assistant-message copilot-assistant-v3">
       <div className="assistant-avatar">
         <Bot size={15} />
       </div>
 
-      <div className="assistant-body">
-        <div className="assistant-message-meta">
-          <span>
-            PayGuard Copilot
-          </span>
+      <div className="assistant-body assistant-body-v3">
+        <div className="assistant-message-meta assistant-meta-v3">
+          <div>
+            <span>
+              PAYGUARD COPILOT
+            </span>
 
-          {message.intent && (
-            <strong>
-              {message.intent.replaceAll(
-                "_",
-                " ",
-              )}
-            </strong>
-          )}
-        </div>
+            {message.intent && (
+              <strong className="copilot-intent-v3">
+                {message.intent.replaceAll(
+                  "_",
+                  " ",
+                )}
+              </strong>
+            )}
+          </div>
 
-        <div className="assistant-answer">
-          {message.content}
+          <LayerTag
+            variant="ai"
+            label="AI interpretation"
+          />
         </div>
 
         {message.evidence &&
           message.evidence.length > 0 && (
-            <div className="copilot-evidence-grid">
-              {message.evidence.map(
-                (item) => (
-                  <div
-                    key={`${item.label}-${item.value}`}
-                  >
-                    <span>
-                      {item.label}
-                    </span>
+            <section className="copilot-evidence-section-v3">
+              <div className="copilot-response-heading-v3">
+                <div>
+                  <Database size={13} />
 
-                    <strong>
-                      {item.value}
-                    </strong>
-                  </div>
-                ),
-              )}
-            </div>
+                  <span>
+                    GROUNDING EVIDENCE
+                  </span>
+                </div>
+
+                <LayerTag
+                  variant="deterministic"
+                  compact
+                  label="Backend evidence"
+                />
+              </div>
+
+              <div className="copilot-evidence-grid copilot-evidence-grid-v3">
+                {message.evidence.map(
+                  (item) => (
+                    <div
+                      className="copilot-evidence-card-v3"
+                      key={`${item.label}-${item.value}`}
+                    >
+                      <span>
+                        {item.label}
+                      </span>
+
+                      <strong data-metric>
+                        {item.value}
+                      </strong>
+                    </div>
+                  ),
+                )}
+              </div>
+            </section>
           )}
+
+        <section className="copilot-answer-section-v3">
+          <div className="copilot-response-heading-v3">
+            <div>
+              <Sparkles size={13} />
+
+              <span>
+                AI INTERPRETATION
+              </span>
+            </div>
+          </div>
+
+          <div className="assistant-answer assistant-answer-v3">
+            {message.content}
+          </div>
+        </section>
 
         {message.incidentId && (
           <button
             type="button"
-            className="copilot-incident-reference"
+            className="copilot-incident-reference copilot-reference-v3"
             onClick={onOpenIncident}
           >
-            <AlertTriangle size={13} />
+            <div className="copilot-reference-icon-v3">
+              <AlertTriangle size={13} />
+            </div>
 
             <div>
               <span>
-                Referenced incident
+                REFERENCED INCIDENT
               </span>
 
               <strong>
@@ -594,6 +650,7 @@ function ChatMessageCard({
           <div className="assistant-timestamp">
             <Clock3 size={11} />
 
+            Generated from PayGuard evidence at{" "}
             {new Date(
               message.generatedAt,
             ).toLocaleTimeString(
@@ -610,7 +667,6 @@ function ChatMessageCard({
   );
 }
 
-
 function ContextItem({
   icon: Icon,
   title,
@@ -621,7 +677,7 @@ function ContextItem({
   description: string;
 }) {
   return (
-    <div className="copilot-context-item">
+    <div className="copilot-context-item copilot-context-item-v3">
       <div>
         <Icon size={14} />
       </div>

@@ -5,10 +5,8 @@ import {
   CircleDollarSign,
   Gauge,
   LogOut,
-  Radar,
   ReceiptText,
   ShieldCheck,
-  Sparkles,
   TestTube2,
   TriangleAlert,
 } from "lucide-react";
@@ -19,6 +17,10 @@ import {
 } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
+import {
+  PageHeader,
+  type PageHeaderStatus,
+} from "./PageHeader";
 
 const navigation = [
   {
@@ -41,6 +43,7 @@ const navigation = [
       },
     ],
   },
+
   {
     label: "Intelligence",
     items: [
@@ -58,34 +61,97 @@ const navigation = [
   },
 ];
 
-const pageTitles: Record<
-  string,
-  { title: string; description: string }
-> = {
+interface PageConfig {
+  title: string;
+  breadcrumb: string;
+  description: string;
+  statuses: PageHeaderStatus[];
+}
+
+const pageConfig: Record<string, PageConfig> = {
   "/": {
+    breadcrumb: "Risk Command Center",
     title: "Risk Command Center",
     description:
       "Live payment health, incidents and financial exposure.",
+    statuses: [
+      {
+        label: "Live monitoring",
+        type: "live",
+      },
+      {
+        label: "Backend sourced",
+        type: "backend",
+      },
+    ],
   },
+
   "/transactions": {
+    breadcrumb: "Transactions",
     title: "Transactions",
     description:
-      "Inspect payment activity and transaction-level risk.",
+      "Inspect merchant-scoped payment activity and deterministic risk evidence.",
+    statuses: [
+      {
+        label: "Live monitoring",
+        type: "live",
+      },
+      {
+        label: "Backend sourced",
+        type: "backend",
+      },
+    ],
   },
+
   "/incidents": {
+    breadcrumb: "Incidents",
     title: "Incidents",
     description:
-      "Investigate operational payment-risk events.",
+      "Correlated payment-risk incidents across all monitored channels.",
+    statuses: [
+      {
+        label: "Live monitoring",
+        type: "live",
+      },
+      {
+        label: "AI assisted",
+        type: "ai",
+      },
+    ],
   },
+
   "/copilot": {
+    breadcrumb: "AI Copilot",
     title: "AI Risk Copilot",
     description:
-      "Ask grounded questions about your PayGuard data.",
+      "Ask PayGuard about your payment risk using grounded merchant evidence.",
+    statuses: [
+      {
+        label: "Evidence grounded",
+        type: "ai",
+      },
+      {
+        label: "Read-only AI access",
+        type: "backend",
+      },
+    ],
   },
+
   "/simulator": {
-    title: "Scenario Simulator",
+    breadcrumb: "Simulator",
+    title: "Risk Simulator",
     description:
-      "Run controlled payment-risk demonstrations.",
+      "Generate deterministic payment scenarios through the PayGuard pipeline.",
+    statuses: [
+      {
+        label: "Demo environment",
+        type: "demo",
+      },
+      {
+        label: "Simulated only",
+        type: "backend",
+      },
+    ],
   },
 };
 
@@ -93,27 +159,54 @@ export function AppShell() {
   const { logout } = useAuth();
   const location = useLocation();
 
-  const page =
-    location.pathname.startsWith("/incidents/")
+  const isIncidentDetail =
+    location.pathname.startsWith(
+      "/incidents/",
+    );
+
+  const page: PageConfig =
+    isIncidentDetail
       ? {
+          breadcrumb: "Incidents > Investigation",
+
           title: "Incident Investigation",
+
           description:
-            "Evidence, AI analysis and controlled mitigation.",
+            "Review deterministic evidence, AI interpretation and controlled response.",
+
+          statuses: [
+            {
+              label: "Incident analysis",
+              type: "critical",
+            },
+            {
+              label: "AI assisted",
+              type: "ai",
+            },
+          ],
         }
-      : pageTitles[location.pathname] ||
-        pageTitles["/"];
+      : pageConfig[location.pathname] ||
+        pageConfig["/"];
 
   return (
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-mark">
-            <ShieldCheck size={20} strokeWidth={2.4} />
+            <ShieldCheck
+              size={20}
+              strokeWidth={2.4}
+            />
           </div>
 
           <div>
-            <div className="brand-name">PayGuard</div>
-            <div className="brand-subtitle">AI Risk Manager</div>
+            <div className="brand-name">
+              PayGuard
+            </div>
+
+            <div className="brand-subtitle">
+              AI Risk Manager
+            </div>
           </div>
         </div>
 
@@ -124,7 +217,9 @@ export function AppShell() {
 
           <div className="merchant-copy">
             <span>Demo environment</span>
-            <strong>Payment Operations</strong>
+            <strong>
+              Payment Operations
+            </strong>
           </div>
 
           <ChevronRight size={16} />
@@ -140,25 +235,36 @@ export function AppShell() {
                 {group.label}
               </div>
 
-              {group.items.map((item) => {
-                const Icon = item.icon;
+              {group.items.map(
+                (item) => {
+                  const Icon = item.icon;
 
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    end={item.path === "/"}
-                    className={({ isActive }) =>
-                      `nav-item ${
-                        isActive ? "active" : ""
-                      }`
-                    }
-                  >
-                    <Icon size={18} />
-                    <span>{item.label}</span>
-                  </NavLink>
-                );
-              })}
+                  return (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      end={
+                        item.path === "/"
+                      }
+                      className={({
+                        isActive,
+                      }) =>
+                        `nav-item ${
+                          isActive
+                            ? "active"
+                            : ""
+                        }`
+                      }
+                    >
+                      <Icon size={18} />
+
+                      <span>
+                        {item.label}
+                      </span>
+                    </NavLink>
+                  );
+                },
+              )}
             </div>
           ))}
         </nav>
@@ -173,12 +279,16 @@ export function AppShell() {
 
           <div className="status-line">
             <span className="status-dot" />
-            <span>Risk engine operational</span>
+            <span>
+              Risk engine operational
+            </span>
           </div>
 
           <div className="status-line">
             <span className="status-dot" />
-            <span>Monitoring live</span>
+            <span>
+              Monitoring live
+            </span>
           </div>
         </div>
 
@@ -193,31 +303,12 @@ export function AppShell() {
       </aside>
 
       <main className="main-panel">
-        <header className="topbar">
-          <div>
-            <div className="breadcrumb">
-              <Radar size={14} />
-              PayGuard
-              <ChevronRight size={13} />
-              <span>{page.title}</span>
-            </div>
-
-            <h1>{page.title}</h1>
-            <p>{page.description}</p>
-          </div>
-
-          <div className="topbar-actions">
-            <div className="live-pill">
-              <span className="pulse-dot" />
-              Live monitoring
-            </div>
-
-            <div className="ai-pill">
-              <Sparkles size={15} />
-              AI assisted
-            </div>
-          </div>
-        </header>
+        <PageHeader
+          title={page.title}
+          breadcrumb={page.breadcrumb}
+          description={page.description}
+          statuses={page.statuses}
+        />
 
         <section className="page-content">
           <Outlet />

@@ -26,6 +26,7 @@ import {
   useParams,
 } from "react-router-dom";
 
+import { LayerTag } from "../components/ui/LayerTag";
 import {
   ApiError,
   apiRequest,
@@ -44,7 +45,6 @@ import type {
   RecommendationItem,
   RecommendationListEnvelope,
 } from "../types/api";
-
 
 function evidenceText(value: unknown) {
   if (typeof value === "string") {
@@ -69,7 +69,6 @@ function evidenceText(value: unknown) {
 
   return String(value);
 }
-
 
 export function IncidentDetailPage() {
   const { incidentId } = useParams();
@@ -110,15 +109,18 @@ export function IncidentDetailPage() {
         apiRequest<IncidentDetailEnvelope>(
           `/incidents/${incidentId}`,
         ),
+
         apiRequest<InvestigationListEnvelope>(
           `/incidents/${incidentId}/investigations`,
         ),
+
         apiRequest<RecommendationListEnvelope>(
           `/incidents/${incidentId}/recommendations`,
         ),
       ]);
 
       setIncident(incidentResponse.data);
+
       setRecommendations(
         recommendationsResponse.data,
       );
@@ -172,6 +174,7 @@ export function IncidentDetailPage() {
     setActionLoading(
       `approve:${recommendationId}`,
     );
+
     setError(null);
 
     try {
@@ -200,6 +203,7 @@ export function IncidentDetailPage() {
     setActionLoading(
       `execute:${recommendationId}`,
     );
+
     setError(null);
 
     try {
@@ -226,6 +230,7 @@ export function IncidentDetailPage() {
     return (
       <div className="incident-detail-loading">
         <div className="loader-ring" />
+
         Loading incident intelligence...
       </div>
     );
@@ -235,7 +240,9 @@ export function IncidentDetailPage() {
     return (
       <div className="error-panel">
         <ShieldAlert size={25} />
+
         <h3>Incident unavailable</h3>
+
         <p>{error}</p>
 
         <button
@@ -253,8 +260,16 @@ export function IncidentDetailPage() {
 
   if (!incident) return null;
 
+  const confidencePercent =
+    investigation
+      ? Math.round(
+          (investigation.confidence_score ||
+            0) * 100,
+        )
+      : 0;
+
   return (
-    <div className="incident-detail-stack">
+    <div className="incident-detail-stack incident-detail-v3">
       <button
         type="button"
         className="incident-back-button"
@@ -273,7 +288,11 @@ export function IncidentDetailPage() {
         </div>
       )}
 
-      <section className="incident-detail-hero">
+      {/* ====================================================
+          INCIDENT HERO
+          ==================================================== */}
+
+      <section className="incident-detail-hero incident-detail-hero-v3">
         <div className="incident-detail-hero-main">
           <div className="incident-detail-meta">
             <span
@@ -304,16 +323,19 @@ export function IncidentDetailPage() {
           <div className="incident-hero-tags">
             <span>
               <WalletCards size={13} />
+
               {incident.primary_payment_method}
             </span>
 
             <span>
               <Building2 size={13} />
+
               {incident.primary_bank}
             </span>
 
             <span>
               <Clock3 size={13} />
+
               {new Date(
                 incident.detected_at,
               ).toLocaleString("en-IN")}
@@ -321,12 +343,18 @@ export function IncidentDetailPage() {
           </div>
         </div>
 
-        <div className="incident-detail-signal">
+        <div className="incident-detail-signal incident-detail-signal-v3">
           <AlertTriangle size={27} />
 
           <div>
-            <span>Operational impact</span>
-            <strong>CRITICAL</strong>
+            <span>
+              Operational impact
+            </span>
+
+            <strong>
+              {incident.severity}
+            </strong>
+
             <small>
               Financial exposure requires
               controlled response
@@ -335,7 +363,11 @@ export function IncidentDetailPage() {
         </div>
       </section>
 
-      <section className="incident-metrics-grid">
+      {/* ====================================================
+          DETERMINISTIC INCIDENT METRICS
+          ==================================================== */}
+
+      <section className="incident-metrics-grid incident-metrics-grid-v3">
         <IncidentMetric
           label="Risk score"
           value={String(
@@ -343,6 +375,7 @@ export function IncidentDetailPage() {
           )}
           helper="Incident-level risk"
           icon={Gauge}
+          compactLayer
         />
 
         <IncidentMetric
@@ -352,6 +385,7 @@ export function IncidentDetailPage() {
           )}
           helper={`${incident.failed_transaction_count} failed`}
           icon={WalletCards}
+          compactLayer
         />
 
         <IncidentMetric
@@ -373,6 +407,7 @@ export function IncidentDetailPage() {
               : "No baseline"
           }
           icon={AlertTriangle}
+          compactLayer
         />
 
         <IncidentMetric
@@ -384,135 +419,237 @@ export function IncidentDetailPage() {
           helper="Deterministic exposure"
           icon={CircleDollarSign}
           danger
+          layerLabel="Backend calculated"
         />
       </section>
 
-      <section className="incident-intelligence-grid">
-        <article className="incident-ai-panel">
-          <div className="incident-section-header">
-            <div className="incident-section-icon ai">
-              <Bot size={18} />
-            </div>
+      {/* ====================================================
+          INVESTIGATION + CONTROLLED RESPONSE
+          ==================================================== */}
 
-            <div>
-              <span className="panel-eyebrow">
-                AI INVESTIGATION
-              </span>
-              <h3>Root-cause analysis</h3>
-            </div>
+      <section className="incident-intelligence-grid incident-intelligence-grid-v3">
+        <div className="incident-investigation-column">
+          {/* ================================================
+              EVIDENCE FIRST
+              ================================================ */}
 
-            {investigation && (
-              <div className="confidence-pill">
-                {Math.round(
-                  (investigation.confidence_score ||
-                    0) * 100,
-                )}
-                % confidence
-              </div>
-            )}
-          </div>
-
-          {!investigation ? (
-            <div className="incident-empty-box">
-              No completed investigation is
-              available.
-            </div>
-          ) : (
-            <>
-              <div className="ai-summary-card">
-                <Sparkles size={17} />
-
-                <div>
-                  <span>AI summary</span>
-                  <p>
-                    {investigation.summary}
-                  </p>
-                </div>
+          <article className="incident-evidence-panel-v3">
+            <div className="incident-section-header incident-section-header-v3">
+              <div className="incident-section-icon evidence">
+                <ShieldCheck size={18} />
               </div>
 
-              <div className="root-cause-block">
-                <span>LIKELY ROOT CAUSE</span>
-
-                <strong>
-                  {
-                    investigation.likely_root_cause
-                  }
-                </strong>
-              </div>
-
-              <div className="evidence-block">
-                <span className="incident-subheading">
-                  EVIDENCE
+              <div>
+                <span className="panel-eyebrow">
+                  GROUNDING EVIDENCE
                 </span>
 
+                <h3>
+                  What PayGuard observed
+                </h3>
+              </div>
+
+              <LayerTag
+                variant="deterministic"
+                label="Backend evidence"
+              />
+            </div>
+
+            {!investigation ? (
+              <div className="incident-empty-box">
+                No investigation evidence is
+                currently available.
+              </div>
+            ) : (
+              <div className="evidence-list-v3">
                 {(investigation.evidence || [])
                   .slice(0, 5)
                   .map((item, index) => (
                     <div
-                      className="evidence-row"
+                      className="evidence-row-v3"
                       key={index}
                     >
-                      <CheckCircle2 size={13} />
+                      <div className="evidence-check-v3">
+                        <Check size={12} />
+                      </div>
+
                       <span>
                         {evidenceText(item)}
                       </span>
                     </div>
                   ))}
               </div>
+            )}
 
-              {investigation.uncertainties
-                .length > 0 && (
-                <div className="uncertainty-block">
-                  <ShieldAlert size={14} />
+            <div className="evidence-authority-note">
+              <ShieldCheck size={13} />
+
+              <span>
+                These facts are supplied to the
+                investigation layer before AI
+                interpretation.
+              </span>
+            </div>
+          </article>
+
+          {/* ================================================
+              AI INTERPRETATION
+              ================================================ */}
+
+          <article className="incident-ai-panel incident-ai-panel-v3">
+            <div className="incident-section-header incident-section-header-v3">
+              <div className="incident-section-icon ai">
+                <Bot size={18} />
+              </div>
+
+              <div>
+                <span className="panel-eyebrow">
+                  AI INVESTIGATION
+                </span>
+
+                <h3>
+                  Root-cause analysis
+                </h3>
+              </div>
+
+              {investigation && (
+                <LayerTag
+                  variant="ai"
+                  confidence={
+                    confidencePercent
+                  }
+                />
+              )}
+            </div>
+
+            {!investigation ? (
+              <div className="incident-empty-box">
+                No completed investigation is
+                available.
+              </div>
+            ) : (
+              <>
+                <div className="ai-summary-card ai-summary-card-v3">
+                  <Sparkles size={17} />
 
                   <div>
-                    <strong>Uncertainty</strong>
-
                     <span>
-                      {evidenceText(
-                        investigation
-                          .uncertainties[0],
-                      )}
+                      AI SUMMARY
                     </span>
+
+                    <p>
+                      {investigation.summary}
+                    </p>
                   </div>
                 </div>
-              )}
 
-              <div className="ai-provenance">
-                <span>
-                  Provider{" "}
+                <div className="root-cause-block root-cause-block-v3">
+                  <span>
+                    LIKELY ROOT CAUSE
+                  </span>
+
                   <strong>
-                    {investigation.provider ||
-                      "PayGuard"}
+                    {
+                      investigation.likely_root_cause
+                    }
                   </strong>
-                </span>
+                </div>
 
-                <i />
+                <div className="uncertainty-block uncertainty-block-v3">
+                  <ShieldAlert size={15} />
 
-                <span>
-                  Model{" "}
-                  <strong>
-                    {investigation.model_name ||
-                      "evidence-grounded"}
-                  </strong>
-                </span>
+                  <div>
+                    <strong>
+                      Uncertainty
+                    </strong>
 
-                <i />
+                    {(investigation.uncertainties ||
+                      []).length > 0 ? (
+                      <div className="uncertainty-list-v3">
+                        {(
+                          investigation.uncertainties ||
+                          []
+                        )
+                          .slice(0, 3)
+                          .map(
+                            (
+                              uncertainty,
+                              index,
+                            ) => (
+                              <span
+                                key={
+                                  index
+                                }
+                              >
+                                {evidenceText(
+                                  uncertainty,
+                                )}
+                              </span>
+                            ),
+                          )}
+                      </div>
+                    ) : (
+                      <span>
+                        None flagged by the
+                        current investigation.
+                      </span>
+                    )}
+                  </div>
+                </div>
 
-                <span>
-                  Prompt{" "}
-                  <strong>
-                    {investigation.prompt_version ||
-                      "investigation-v1"}
-                  </strong>
-                </span>
-              </div>
-            </>
-          )}
-        </article>
+                <details className="alternative-explanations-v3">
+                  <summary>
+                    Alternative explanations
+                  </summary>
 
-        <article className="incident-response-panel">
-          <div className="incident-section-header">
+                  <p>
+                    PayGuard does not fabricate
+                    alternative hypotheses when
+                    they are not supplied by the
+                    investigation evidence.
+                  </p>
+                </details>
+
+                <div className="ai-provenance">
+                  <span>
+                    Provider{" "}
+                    <strong>
+                      {investigation.provider ||
+                        "PayGuard"}
+                    </strong>
+                  </span>
+
+                  <i />
+
+                  <span>
+                    Model{" "}
+                    <strong>
+                      {investigation.model_name ||
+                        "evidence-grounded"}
+                    </strong>
+                  </span>
+
+                  <i />
+
+                  <span>
+                    Prompt{" "}
+                    <strong>
+                      {investigation.prompt_version ||
+                        "investigation-v1"}
+                    </strong>
+                  </span>
+                </div>
+              </>
+            )}
+          </article>
+        </div>
+
+        {/* ==================================================
+            RECOMMENDATION + HUMAN CONTROL
+            ================================================== */}
+
+        <article className="incident-response-panel incident-response-panel-v3">
+          <div className="incident-section-header incident-section-header-v3">
             <div className="incident-section-icon response">
               <ShieldCheck size={18} />
             </div>
@@ -521,8 +658,16 @@ export function IncidentDetailPage() {
               <span className="panel-eyebrow">
                 CONTROLLED RESPONSE
               </span>
-              <h3>Recommended action</h3>
+
+              <h3>
+                Recommended action
+              </h3>
             </div>
+
+            <LayerTag
+              variant="ai"
+              label="AI recommendation"
+            />
           </div>
 
           {recommendations.length === 0 ? (
@@ -531,144 +676,193 @@ export function IncidentDetailPage() {
             </div>
           ) : (
             recommendations.map(
-              (recommendation) => (
-                <div
-                  className="recommendation-card"
-                  key={recommendation.id}
-                >
-                  <div className="recommendation-status-line">
-                    <span
-                      className={`approval-badge ${recommendation.approval_status.toLowerCase()}`}
-                    >
-                      {
-                        recommendation.approval_status
-                      }
-                    </span>
+              (recommendation) => {
+                const executed =
+                  recommendation.status ===
+                  "EXECUTED";
 
-                    <span>
-                      {recommendation.execution_mode}
-                    </span>
-                  </div>
+                const approved =
+                  recommendation.approval_status ===
+                    "APPROVED" ||
+                  executed;
 
-                  <h4>
-                    {recommendation.title}
-                  </h4>
+                return (
+                  <div
+                    className="recommendation-card recommendation-card-v3"
+                    key={recommendation.id}
+                  >
+                    <div className="recommendation-status-line recommendation-status-line-v3">
+                      <span
+                        className={`approval-badge ${recommendation.approval_status.toLowerCase()}`}
+                      >
+                        {
+                          recommendation.approval_status
+                        }
+                      </span>
 
-                  <p>
-                    {recommendation.rationale}
-                  </p>
-
-                  <div className="recommendation-action-box">
-                    <span>
-                      PROPOSED ACTION
-                    </span>
-
-                    <strong>
-                      {String(
-                        recommendation
-                          .proposed_action
-                          .action ||
-                          recommendation
-                            .recommendation_type,
-                      ).replaceAll("_", " ")}
-                    </strong>
-
-                    <small>
-                      Human approval required
-                    </small>
-                  </div>
-
-                  {recommendation.status ===
-                  "EXECUTED" ? (
-                    <div className="executed-result">
-                      <CheckCircle2 size={16} />
-
-                      <div>
-                        <strong>
-                          Simulated mitigation
-                          completed
-                        </strong>
-
-                        <span>
-                          No live payment routing
-                          was changed.
-                        </span>
-                      </div>
+                      <span className="execution-mode-v3">
+                        {
+                          recommendation.execution_mode
+                        }
+                      </span>
                     </div>
-                  ) : recommendation.approval_status ===
-                    "APPROVED" ? (
-                    <button
-                      type="button"
-                      className="primary-button recommendation-primary-action"
-                      disabled={
-                        actionLoading !== null
-                      }
-                      onClick={() =>
-                        void executeRecommendation(
-                          recommendation.id,
-                        )
-                      }
-                    >
-                      {actionLoading ===
-                      `execute:${recommendation.id}` ? (
-                        <>
-                          <LoaderCircle
-                            size={14}
-                            className="spin"
-                          />
-                          Simulating...
-                        </>
-                      ) : (
-                        <>
-                          <Play size={14} />
-                          Execute simulated action
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="primary-button recommendation-primary-action"
-                      disabled={
-                        actionLoading !== null
-                      }
-                      onClick={() =>
-                        void approveRecommendation(
-                          recommendation.id,
-                        )
-                      }
-                    >
-                      {actionLoading ===
-                      `approve:${recommendation.id}` ? (
-                        <>
-                          <LoaderCircle
-                            size={14}
-                            className="spin"
-                          />
-                          Approving...
-                        </>
-                      ) : (
-                        <>
-                          <Check size={14} />
-                          Approve recommendation
-                        </>
-                      )}
-                    </button>
-                  )}
 
-                  <div className="approval-safety-note">
-                    <ShieldCheck size={13} />
-                    AI cannot bypass this human
-                    approval gate.
+                    <RecommendationProgress
+                      approved={approved}
+                      executed={executed}
+                    />
+
+                    <div className="recommendation-copy-v3">
+                      <span className="panel-eyebrow">
+                        RECOMMENDATION
+                      </span>
+
+                      <h4>
+                        {recommendation.title}
+                      </h4>
+
+                      <p>
+                        {
+                          recommendation.rationale
+                        }
+                      </p>
+                    </div>
+
+                    <div className="recommendation-action-box recommendation-action-box-v3">
+                      <div className="recommendation-action-heading-v3">
+                        <span>
+                          PROPOSED ACTION
+                        </span>
+
+                        <LayerTag
+                          variant="human"
+                          label="Human approval required"
+                        />
+                      </div>
+
+                      <strong>
+                        {String(
+                          recommendation
+                            .proposed_action
+                            .action ||
+                            recommendation
+                              .recommendation_type,
+                        ).replaceAll(
+                          "_",
+                          " ",
+                        )}
+                      </strong>
+
+                      <small>
+                        This action cannot progress
+                        without an explicit operator
+                        decision.
+                      </small>
+                    </div>
+
+                    {executed ? (
+                      <div className="executed-result executed-result-v3">
+                        <CheckCircle2
+                          size={17}
+                        />
+
+                        <div>
+                          <strong>
+                            Simulated mitigation
+                            completed
+                          </strong>
+
+                          <span>
+                            No live payment routing
+                            was changed.
+                          </span>
+                        </div>
+                      </div>
+                    ) : approved ? (
+                      <button
+                        type="button"
+                        className="primary-button pg-primary-action recommendation-primary-action"
+                        disabled={
+                          actionLoading !== null
+                        }
+                        onClick={() =>
+                          void executeRecommendation(
+                            recommendation.id,
+                          )
+                        }
+                      >
+                        {actionLoading ===
+                        `execute:${recommendation.id}` ? (
+                          <>
+                            <LoaderCircle
+                              size={14}
+                              className="spin"
+                            />
+
+                            Simulating...
+                          </>
+                        ) : (
+                          <>
+                            <Play size={14} />
+
+                            Execute simulated
+                            action
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="primary-button pg-primary-action recommendation-primary-action"
+                        disabled={
+                          actionLoading !== null
+                        }
+                        onClick={() =>
+                          void approveRecommendation(
+                            recommendation.id,
+                          )
+                        }
+                      >
+                        {actionLoading ===
+                        `approve:${recommendation.id}` ? (
+                          <>
+                            <LoaderCircle
+                              size={14}
+                              className="spin"
+                            />
+
+                            Approving...
+                          </>
+                        ) : (
+                          <>
+                            <Check size={14} />
+
+                            Approve
+                            recommendation
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    <div className="approval-safety-note approval-safety-note-v3">
+                      <ShieldCheck size={13} />
+
+                      AI cannot bypass this human
+                      approval gate.
+                    </div>
                   </div>
-                </div>
-              ),
+                );
+              },
             )
           )}
         </article>
       </section>
 
-      <section className="incident-integrity-banner">
+      {/* ====================================================
+          SYSTEM AUTHORITY BOUNDARY
+          ==================================================== */}
+
+      <section className="incident-integrity-banner incident-integrity-banner-v3">
         <ShieldCheck size={16} />
 
         <div>
@@ -702,6 +896,59 @@ export function IncidentDetailPage() {
   );
 }
 
+function RecommendationProgress({
+  approved,
+  executed,
+}: {
+  approved: boolean;
+  executed: boolean;
+}) {
+  return (
+    <div
+      className="recommendation-progress"
+      aria-label="Recommendation approval progress"
+    >
+      <div
+        className={`recommendation-progress-step ${
+          approved || executed
+            ? "complete"
+            : "current"
+        }`}
+      >
+        <span>1</span>
+        <strong>Pending</strong>
+      </div>
+
+      <i />
+
+      <div
+        className={`recommendation-progress-step ${
+          executed
+            ? "complete"
+            : approved
+              ? "current"
+              : ""
+        }`}
+      >
+        <span>2</span>
+        <strong>Approved</strong>
+      </div>
+
+      <i />
+
+      <div
+        className={`recommendation-progress-step ${
+          executed ? "complete" : ""
+        }`}
+      >
+        <span>3</span>
+        <strong>
+          Simulated execution
+        </strong>
+      </div>
+    </div>
+  );
+}
 
 function IncidentMetric({
   label,
@@ -709,26 +956,45 @@ function IncidentMetric({
   helper,
   icon: Icon,
   danger = false,
+  compactLayer = false,
+  layerLabel,
 }: {
   label: string;
   value: string;
   helper: string;
   icon: typeof Gauge;
   danger?: boolean;
+  compactLayer?: boolean;
+  layerLabel?: string;
 }) {
   return (
     <article
-      className={`incident-metric-card ${
+      className={`incident-metric-card incident-metric-card-v3 ${
         danger ? "danger" : ""
       }`}
     >
+      <div className="incident-metric-layer-v3">
+        <LayerTag
+          variant="deterministic"
+          compact={compactLayer}
+          label={
+            layerLabel ||
+            "Deterministic value"
+          }
+        />
+      </div>
+
       <div className="incident-metric-icon">
         <Icon size={16} />
       </div>
 
       <div>
         <span>{label}</span>
-        <strong>{value}</strong>
+
+        <strong data-metric>
+          {value}
+        </strong>
+
         <small>{helper}</small>
       </div>
     </article>

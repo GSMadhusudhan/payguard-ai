@@ -3,6 +3,7 @@ import {
   ArrowUpRight,
   CheckCircle2,
   CircleDollarSign,
+  Info,
   RefreshCw,
   ShieldAlert,
   ShieldCheck,
@@ -27,6 +28,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
+import { LayerTag } from "../components/ui/LayerTag";
 import { MetricCard } from "../components/ui/MetricCard";
 import {
   ApiError,
@@ -162,12 +164,18 @@ export function DashboardPage() {
     return (
       <div className="error-panel">
         <ShieldAlert size={26} />
+
         <h3>Dashboard unavailable</h3>
-        <p>{error || "Unable to load data."}</p>
+
+        <p>
+          {error || "Unable to load data."}
+        </p>
 
         <button
           className="secondary-button"
-          onClick={() => void loadDashboard()}
+          onClick={() =>
+            void loadDashboard()
+          }
         >
           <RefreshCw size={16} />
           Retry
@@ -180,22 +188,30 @@ export function DashboardPage() {
   const activeIncident = data.incidents[0];
 
   return (
-    <div className="dashboard-stack">
-      <div className="dashboard-toolbar">
-        <div>
-          <span className="dashboard-date">
-            LIVE PAYMENT INTELLIGENCE
-          </span>
+    <div className="dashboard-stack dashboard-v2">
+      <div className="dashboard-toolbar dashboard-v2-toolbar">
+        <div className="dashboard-v2-toolbar-copy">
+          <div className="dashboard-v2-source-row">
+            <span className="dashboard-date">
+              LIVE PAYMENT INTELLIGENCE
+            </span>
+
+            <LayerTag
+              variant="deterministic"
+              label="Backend sourced"
+              compact
+            />
+          </div>
 
           <span className="dashboard-context">
-            Risk data is sourced from the
-            deterministic PayGuard backend.
+            Operational payment facts are sourced
+            from PayGuard's deterministic backend.
           </span>
         </div>
 
         <button
           type="button"
-          className="secondary-button"
+          className="secondary-button dashboard-v2-refresh"
           disabled={refreshing}
           onClick={() =>
             void loadDashboard(true)
@@ -207,80 +223,143 @@ export function DashboardPage() {
               refreshing ? "spin" : ""
             }
           />
+
           {refreshing
             ? "Refreshing"
             : "Refresh"}
         </button>
       </div>
 
-      <section className="metrics-grid">
-        <MetricCard
-          label="Payment health"
-          value={`${summary.payment_health_score}`}
-          helper={`${formatPercent(
-            summary.success_rate,
-          )} success rate`}
-          icon={ShieldCheck}
-          tone={
-            summary.payment_health_score >= 90
-              ? "success"
-              : "default"
-          }
-        />
+      <section className="metrics-grid dashboard-v2-metrics">
+        <div className="dashboard-v2-metric-slot">
+          <LayerTag
+            variant="deterministic"
+            label="Backend calculated"
+            compact
+          />
 
-        <MetricCard
-          label="Transactions today"
-          value={formatNumber(
-            summary.transactions_today,
-          )}
-          helper={`${formatNumber(
-            summary.failed_transactions_today,
-          )} failed payments`}
-          icon={WalletCards}
-        />
+          <MetricCard
+            label="Payment health"
+            value={`${summary.payment_health_score}`}
+            helper={`${formatPercent(
+              summary.success_rate,
+            )} success rate`}
+            icon={ShieldCheck}
+            tone={
+              summary.payment_health_score >=
+              90
+                ? "success"
+                : "default"
+            }
+          />
+        </div>
 
-        <MetricCard
-          label="Open incidents"
-          value={formatNumber(
-            summary.open_incidents,
-          )}
-          helper={`${summary.critical_incidents} critical`}
-          icon={AlertTriangle}
-          tone={
-            summary.critical_incidents > 0
-              ? "danger"
-              : "default"
-          }
-        />
+        <div className="dashboard-v2-metric-slot">
+          <LayerTag
+            variant="deterministic"
+            label="Transaction fact"
+            compact
+          />
 
-        <MetricCard
-          label="Revenue at risk"
-          value={formatMoneyFromPaise(
-            summary.revenue_at_risk,
-            true,
-          )}
-          helper="Deterministic exposure"
-          icon={CircleDollarSign}
-          tone={
-            summary.revenue_at_risk > 0
-              ? "danger"
-              : "default"
-          }
-        />
+          <MetricCard
+            label="Transactions today"
+            value={formatNumber(
+              summary.transactions_today,
+            )}
+            helper={`${formatNumber(
+              summary.failed_transactions_today,
+            )} failed payments`}
+            icon={WalletCards}
+          />
+        </div>
+
+        <div className="dashboard-v2-metric-slot">
+          <LayerTag
+            variant="deterministic"
+            label="Incident state"
+            compact
+          />
+
+          <MetricCard
+            label="Open incidents"
+            value={formatNumber(
+              summary.open_incidents,
+            )}
+            helper={`${summary.critical_incidents} critical`}
+            icon={AlertTriangle}
+            tone={
+              summary.critical_incidents > 0
+                ? "danger"
+                : "default"
+            }
+          />
+        </div>
+
+        <div className="dashboard-v2-metric-slot">
+          <LayerTag
+            variant="deterministic"
+            label="Backend calculated"
+            compact
+          />
+
+          <MetricCard
+            label="Revenue at risk"
+            value={formatMoneyFromPaise(
+              summary.revenue_at_risk,
+              true,
+            )}
+            helper="Deterministic exposure"
+            icon={CircleDollarSign}
+            tone={
+              summary.revenue_at_risk > 0
+                ? "danger"
+                : "default"
+            }
+          />
+        </div>
       </section>
 
       <section className="dashboard-main-grid">
-        <article className="panel risk-panel">
+        <article className="panel risk-panel dashboard-v2-panel">
           <div className="panel-header">
             <div>
               <span className="panel-eyebrow">
                 Risk posture
               </span>
-              <h3>Transaction risk distribution</h3>
+
+              <h3>
+                Transaction risk distribution
+              </h3>
             </div>
 
-            <div className="panel-badge">
-              {formatNumber(riskTotal)} evaluated
+            <div className="panel-header-actions-v2">
+              <LayerTag
+                variant="deterministic"
+                label="Transaction level"
+                compact
+              />
+
+              <div className="panel-badge">
+                {formatNumber(riskTotal)} evaluated
+              </div>
+            </div>
+          </div>
+
+          <div className="risk-distribution-note">
+            <Info size={15} />
+
+            <div>
+              <strong>
+                Per-transaction risk, not incident
+                severity.
+              </strong>
+
+              <span>
+                A correlated incident can become
+                CRITICAL even when most individual
+                transactions remain LOW or MEDIUM
+                risk.
+              </span>
             </div>
           </div>
 
@@ -292,7 +371,9 @@ export function DashboardPage() {
               >
                 <PieChart>
                   <Pie
-                    data={data.riskDistribution}
+                    data={
+                      data.riskDistribution
+                    }
                     dataKey="count"
                     nameKey="risk_level"
                     innerRadius={66}
@@ -302,7 +383,9 @@ export function DashboardPage() {
                     {data.riskDistribution.map(
                       (entry) => (
                         <Cell
-                          key={entry.risk_level}
+                          key={
+                            entry.risk_level
+                          }
                           className={`risk-segment risk-${entry.risk_level.toLowerCase()}`}
                         />
                       ),
@@ -311,20 +394,22 @@ export function DashboardPage() {
 
                   <Tooltip
                     contentStyle={{
-                      background: "#111216",
+                      background: "#131417",
                       border:
-                        "1px solid rgba(255,255,255,.09)",
+                        "1px solid #2a2d33",
                       borderRadius: "12px",
                       fontSize: "12px",
+                      color: "#f4f5f3",
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
 
               <div className="risk-chart-center">
-                <strong>
+                <strong data-metric>
                   {formatNumber(riskTotal)}
                 </strong>
+
                 <span>transactions</span>
               </div>
             </div>
@@ -340,11 +425,14 @@ export function DashboardPage() {
                       <span
                         className={`risk-dot risk-${item.risk_level.toLowerCase()}`}
                       />
+
                       {item.risk_level}
                     </div>
 
-                    <strong>
-                      {formatNumber(item.count)}
+                    <strong data-metric>
+                      {formatNumber(
+                        item.count,
+                      )}
                     </strong>
                   </div>
                 ),
@@ -353,108 +441,143 @@ export function DashboardPage() {
           </div>
         </article>
 
-        <article className="panel payment-panel">
+        <article className="panel payment-panel dashboard-v2-panel">
           <div className="panel-header">
             <div>
               <span className="panel-eyebrow">
                 Payment rails
               </span>
+
               <h3>Method performance</h3>
             </div>
 
-            <TrendingUp size={18} />
+            <div className="panel-header-actions-v2">
+              <LayerTag
+                variant="deterministic"
+                label="Observed traffic"
+                compact
+              />
+
+              <TrendingUp size={18} />
+            </div>
           </div>
 
           <div className="payment-method-list">
-            {data.paymentMethods.length === 0 ? (
+            {data.paymentMethods.length ===
+            0 ? (
               <div className="empty-state">
                 No payment traffic yet.
               </div>
             ) : (
-              data.paymentMethods.map((method) => (
-                <div
-                  className="payment-method-row"
-                  key={method.payment_method}
-                >
-                  <div className="method-identity">
-                    <div className="method-icon">
-                      {method.payment_method
-                        .slice(0, 2)
-                        .toUpperCase()}
+              data.paymentMethods.map(
+                (method) => (
+                  <div
+                    className="payment-method-row"
+                    key={
+                      method.payment_method
+                    }
+                  >
+                    <div className="method-identity">
+                      <div className="method-icon">
+                        {method.payment_method
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </div>
+
+                      <div>
+                        <strong>
+                          {
+                            method.payment_method
+                          }
+                        </strong>
+
+                        <span>
+                          {formatNumber(
+                            method.transaction_count,
+                          )}{" "}
+                          transactions
+                        </span>
+                      </div>
                     </div>
 
-                    <div>
-                      <strong>
-                        {method.payment_method}
-                      </strong>
-                      <span>
-                        {formatNumber(
-                          method.transaction_count,
-                        )}{" "}
-                        transactions
-                      </span>
-                    </div>
-                  </div>
+                    <div className="method-health">
+                      <div className="method-health-top">
+                        <span>
+                          Success
+                        </span>
 
-                  <div className="method-health">
-                    <div className="method-health-top">
-                      <span>Success</span>
-                      <strong>
-                        {formatPercent(
-                          method.success_rate,
-                        )}
-                      </strong>
-                    </div>
+                        <strong data-metric>
+                          {formatPercent(
+                            method.success_rate,
+                          )}
+                        </strong>
+                      </div>
 
-                    <div className="health-track">
-                      <span
-                        style={{
-                          width: `${Math.min(
-                            100,
-                            method.success_rate *
+                      <div className="health-track">
+                        <span
+                          style={{
+                            width: `${Math.min(
                               100,
-                          )}%`,
-                        }}
-                      />
-                    </div>
+                              method.success_rate *
+                                100,
+                            )}%`,
+                          }}
+                        />
+                      </div>
 
-                    <small>
-                      Risk score{" "}
-                      {method.risk_score}
-                    </small>
+                      <small>
+                        Avg. risk score{" "}
+                        {method.risk_score}
+                      </small>
+                    </div>
                   </div>
-                </div>
-              ))
+                ),
+              )
             )}
           </div>
         </article>
       </section>
 
-      <section className="panel incident-panel">
+      <section className="panel incident-panel dashboard-v2-panel dashboard-v2-incident-panel">
         <div className="panel-header">
           <div>
             <span className="panel-eyebrow">
               Active response
             </span>
-            <h3>Highest priority incident</h3>
+
+            <h3>
+              Highest priority incident
+            </h3>
           </div>
 
-          <Link
-            to="/incidents"
-            className="text-link"
-          >
-            View all incidents
-            <ArrowUpRight size={15} />
-          </Link>
+          <div className="panel-header-actions-v2">
+            {activeIncident && (
+              <LayerTag
+                variant="deterministic"
+                label="Correlated incident"
+                compact
+              />
+            )}
+
+            <Link
+              to="/incidents"
+              className="text-link"
+            >
+              View all incidents
+              <ArrowUpRight size={15} />
+            </Link>
+          </div>
         </div>
 
         {!activeIncident ? (
           <div className="incident-clear">
             <CheckCircle2 size={25} />
+
             <div>
               <strong>
                 No active incidents
               </strong>
+
               <span>
                 Payment operations are currently
                 within monitored thresholds.
@@ -464,7 +587,7 @@ export function DashboardPage() {
         ) : (
           <Link
             to="/incidents"
-            className="active-incident-card"
+            className="active-incident-card dashboard-v2-active-incident"
           >
             <div className="incident-severity-bar" />
 
@@ -481,7 +604,9 @@ export function DashboardPage() {
                 </span>
 
                 <span>
-                  {activeIncident.incident_number}
+                  {
+                    activeIncident.incident_number
+                  }
                 </span>
 
                 <span>
@@ -491,7 +616,9 @@ export function DashboardPage() {
                 </span>
               </div>
 
-              <h4>{activeIncident.title}</h4>
+              <h4>
+                {activeIncident.title}
+              </h4>
 
               <div className="incident-detail-row">
                 <span>
@@ -502,8 +629,11 @@ export function DashboardPage() {
                 {activeIncident.bank && (
                   <>
                     <i />
+
                     <span>
-                      {activeIncident.bank}
+                      {
+                        activeIncident.bank
+                      }
                     </span>
                   </>
                 )}
@@ -519,14 +649,23 @@ export function DashboardPage() {
               </div>
             </div>
 
-            <div className="incident-exposure">
-              <span>Revenue at risk</span>
-              <strong>
+            <div className="incident-exposure dashboard-v2-exposure">
+              <span>
+                Revenue at risk
+              </span>
+
+              <strong data-metric>
                 {formatMoneyFromPaise(
                   activeIncident.revenue_at_risk,
                   true,
                 )}
               </strong>
+
+              <LayerTag
+                variant="deterministic"
+                label="Backend calculated"
+                compact
+              />
             </div>
 
             <ArrowUpRight

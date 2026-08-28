@@ -19,10 +19,9 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import { LayerTag } from "../components/ui/LayerTag";
 import {
   ApiError,
   apiRequest,
@@ -65,14 +64,14 @@ const scenarioMeta: Record<
   }
 > = {
   bank_degradation: {
-    label: "Judge demo",
+    label: "Primary judge demo",
     icon: AlertTriangle,
     featured: true,
     details: [
+      "100 deterministic transactions",
       "5% historical UPI baseline",
-      "30% ABC Bank UPI failure spike",
-      "Other banks remain healthy",
-      "Cards remain healthy",
+      "30% ABC Bank UPI failure rate",
+      "20 ABC Bank transactions · 6 failed",
       "₹4.28L deterministic exposure",
       "AI investigation + recommendation",
     ],
@@ -85,7 +84,7 @@ const scenarioMeta: Record<
       "Healthy payment traffic",
       "Low failure-rate baseline",
       "UPI + card transactions",
-      "Uses the real risk pipeline",
+      "Real PayGuard processing pipeline",
     ],
   },
 };
@@ -95,53 +94,60 @@ export function SimulatorPage() {
 
   const [scenarios, setScenarios] =
     useState<Scenario[]>([]);
+
   const [loading, setLoading] =
     useState(true);
+
   const [error, setError] =
     useState<string | null>(null);
 
-  const [runningScenario, setRunningScenario] =
-    useState<string | null>(null);
+  const [
+    runningScenario,
+    setRunningScenario,
+  ] = useState<string | null>(null);
 
   const [lastRun, setLastRun] =
     useState<SimulationRun | null>(null);
 
-  const loadScenarios = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const loadScenarios = useCallback(
+    async () => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const response =
-        await apiRequest<ScenarioEnvelope>(
-          "/simulator/scenarios",
+      try {
+        const response =
+          await apiRequest<ScenarioEnvelope>(
+            "/simulator/scenarios",
+          );
+
+        setScenarios(response.data);
+      } catch (err) {
+        if (
+          err instanceof ApiError &&
+          err.status === 401
+        ) {
+          localStorage.removeItem(
+            "payguard_access_token",
+          );
+
+          navigate("/login", {
+            replace: true,
+          });
+
+          return;
+        }
+
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load simulator.",
         );
-
-      setScenarios(response.data);
-    } catch (err) {
-      if (
-        err instanceof ApiError &&
-        err.status === 401
-      ) {
-        localStorage.removeItem(
-          "payguard_access_token",
-        );
-
-        navigate("/login", {
-          replace: true,
-        });
-
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to load simulator.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [navigate]);
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     void loadScenarios();
@@ -183,68 +189,79 @@ export function SimulatorPage() {
     return (
       <div className="simulator-loading">
         <div className="loader-ring" />
+
         <span>
-          Loading simulator scenarios...
+          Loading deterministic risk
+          scenarios...
         </span>
       </div>
     );
   }
 
+  const isBankRun =
+    lastRun?.scenario_id ===
+    "bank_degradation";
+
   return (
-    <div className="simulator-stack">
-      <section className="simulator-hero">
+    <div className="simulator-stack simulator-v3">
+      <section className="simulator-hero simulator-hero-v3">
         <div className="simulator-hero-copy">
           <div className="simulator-kicker">
-            <Sparkles size={14} />
-            CONTROLLED RISK LAB
+            <TestTube2 size={14} />
+            RISK SCENARIO LAB
           </div>
 
           <h2>
-            Trigger payment risk.
+            Generate risk.
             <br />
-            Watch PayGuard respond.
+            Observe the complete response.
           </h2>
 
           <p>
-            Generate deterministic payment traffic
-            through the same ingestion, risk,
-            incident and AI pipelines used by the
-            application.
+            Controlled scenarios flow through
+            PayGuard's real ingestion, risk,
+            incident and investigation pipeline.
           </p>
         </div>
 
-        <div className="simulator-flow">
-          <div>
-            <Database size={16} />
-            <span>Generate</span>
-          </div>
+        <div className="simulator-flow simulator-flow-v3">
+          <FlowStep
+            icon={Database}
+            label="Generate"
+            layer="FACT"
+          />
 
-          <ArrowRight size={15} />
+          <ArrowRight size={14} />
 
-          <div>
-            <Zap size={16} />
-            <span>Detect</span>
-          </div>
+          <FlowStep
+            icon={Zap}
+            label="Detect"
+            layer="RISK"
+          />
 
-          <ArrowRight size={15} />
+          <ArrowRight size={14} />
 
-          <div>
-            <Sparkles size={16} />
-            <span>Investigate</span>
-          </div>
+          <FlowStep
+            icon={Sparkles}
+            label="Investigate"
+            layer="AI"
+            ai
+          />
 
-          <ArrowRight size={15} />
+          <ArrowRight size={14} />
 
-          <div>
-            <ShieldCheck size={16} />
-            <span>Respond</span>
-          </div>
+          <FlowStep
+            icon={ShieldCheck}
+            label="Respond"
+            layer="HUMAN"
+          />
         </div>
       </section>
 
       {error && (
-        <div className="simulator-error">
+        <div className="simulator-error simulator-error-v3">
           <AlertTriangle size={16} />
+
           <span>{error}</span>
 
           <button
@@ -259,23 +276,35 @@ export function SimulatorPage() {
       )}
 
       <section className="scenario-section">
-        <div className="section-heading-row">
+        <div className="section-heading-row scenario-heading-v3">
           <div>
             <span className="panel-eyebrow">
-              Available scenarios
+              CONTROLLED ENVIRONMENTS
             </span>
 
             <h3>
-              Choose a payment environment
+              Choose a payment scenario
             </h3>
+
+            <p>
+              All generated traffic is isolated to
+              the PayGuard demo environment.
+            </p>
           </div>
 
-          <span className="scenario-count">
-            {scenarios.length} scenarios
-          </span>
+          <div className="scenario-heading-meta-v3">
+            <LayerTag
+              variant="deterministic"
+              label="Deterministic scenarios"
+            />
+
+            <span className="scenario-count">
+              {scenarios.length} available
+            </span>
+          </div>
         </div>
 
-        <div className="scenario-grid">
+        <div className="scenario-grid scenario-grid-v3">
           {scenarios.map((scenario) => {
             const meta =
               scenarioMeta[scenario.id] || {
@@ -285,21 +314,22 @@ export function SimulatorPage() {
               };
 
             const Icon = meta.icon;
+
             const isRunning =
               runningScenario === scenario.id;
 
             return (
               <article
                 key={scenario.id}
-                className={`scenario-card ${
+                className={`scenario-card scenario-card-v3 ${
                   meta.featured
-                    ? "featured"
+                    ? "featured featured-v3"
                     : ""
                 }`}
               >
                 {meta.featured && (
-                  <div className="featured-ribbon">
-                    RECOMMENDED DEMO
+                  <div className="featured-ribbon featured-ribbon-v3">
+                    PRIMARY BUILDATHON DEMO
                   </div>
                 )}
 
@@ -314,29 +344,89 @@ export function SimulatorPage() {
                     <Icon size={20} />
                   </div>
 
-                  <span className="scenario-type">
-                    {meta.label}
-                  </span>
+                  <div className="scenario-type-stack-v3">
+                    <span className="scenario-type">
+                      {meta.label}
+                    </span>
+
+                    {meta.featured ? (
+                      <LayerTag
+                        variant="deterministic"
+                        label="Controlled scenario"
+                        compact
+                      />
+                    ) : (
+                      <LayerTag
+                        variant="deterministic"
+                        compact
+                        label="Deterministic scenario"
+                      />
+                    )}
+                  </div>
                 </div>
 
                 <h4>{scenario.name}</h4>
 
                 <p>{scenario.description}</p>
 
-                <div className="scenario-details">
+                {scenario.id ===
+                  "bank_degradation" && (
+                  <div className="degradation-visual-v3">
+                    <div>
+                      <span>
+                        HISTORICAL
+                      </span>
+
+                      <strong>
+                        5%
+                      </strong>
+
+                      <small>
+                        baseline
+                      </small>
+                    </div>
+
+                    <ArrowRight size={16} />
+
+                    <div className="degradation-current-v3">
+                      <span>
+                        CURRENT
+                      </span>
+
+                      <strong>
+                        30%
+                      </strong>
+
+                      <small>
+                        ABC Bank UPI
+                      </small>
+                    </div>
+
+                    <div className="degradation-multiplier-v3">
+                      6× spike
+                    </div>
+                  </div>
+                )}
+
+                <div className="scenario-details scenario-details-v3">
                   {meta.details.map((detail) => (
                     <div key={detail}>
-                      <CheckCircle2 size={12} />
+                      <CheckCircle2
+                        size={12}
+                      />
+
                       <span>{detail}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="scenario-card-footer">
+                <div className="scenario-card-footer scenario-footer-v3">
                   <div className="scenario-config">
                     <WalletCards size={13} />
                     100 transactions
+
                     <i />
+
                     <Clock3 size={13} />
                     60s logical window
                   </div>
@@ -344,7 +434,7 @@ export function SimulatorPage() {
                   <button
                     className={
                       meta.featured
-                        ? "primary-button scenario-run"
+                        ? "pg-primary-action scenario-run"
                         : "secondary-button scenario-run"
                     }
                     type="button"
@@ -363,12 +453,16 @@ export function SimulatorPage() {
                           size={14}
                           className="spin"
                         />
+
                         Running pipeline...
                       </>
                     ) : (
                       <>
                         <Play size={14} />
-                        Run scenario
+
+                        {meta.featured
+                          ? "Run bank degradation"
+                          : "Run scenario"}
                       </>
                     )}
                   </button>
@@ -380,75 +474,167 @@ export function SimulatorPage() {
       </section>
 
       {lastRun && (
-        <section className="simulation-result">
-          <div className="result-success-icon">
-            <CheckCircle2 size={23} />
-          </div>
-
-          <div className="result-main">
-            <span className="panel-eyebrow">
-              Simulation complete
-            </span>
-
-            <h3>
-              {lastRun.scenario_id ===
-              "bank_degradation"
-                ? "PayGuard detected the ABC Bank degradation."
-                : "Healthy traffic generated successfully."}
-            </h3>
-
-            <div className="result-metadata">
-              <span>
-                <strong>
-                  {lastRun.transactions_generated}
-                </strong>{" "}
-                transactions
-              </span>
-
-              <i />
-
-              <span>
-                Status{" "}
-                <strong>
-                  {lastRun.status}
-                </strong>
-              </span>
-
-              <i />
-
-              <span className="result-id">
-                {lastRun.simulation_id}
-              </span>
+        <section className="simulation-result simulation-result-v3">
+          <div className="simulation-result-header-v3">
+            <div className="result-success-icon">
+              <CheckCircle2 size={23} />
             </div>
-          </div>
 
-          {lastRun.incident_id ? (
-            <div className="result-impact">
-              <div>
-                <AlertTriangle size={14} />
-                Incident created
-              </div>
+            <div className="result-main">
+              <span className="panel-eyebrow">
+                SIMULATION COMPLETE
+              </span>
 
-              <div>
-                <CircleDollarSign size={14} />
-                ₹4.28L exposure
-              </div>
+              <h3>
+                {isBankRun
+                  ? "PayGuard detected the ABC Bank UPI degradation."
+                  : "Healthy payment traffic generated successfully."}
+              </h3>
 
-              <div>
-                <Sparkles size={14} />
-                AI investigation ready
+              <div className="result-metadata">
+                <span>
+                  Simulation{" "}
+                  <strong>
+                    {lastRun.simulation_id.slice(
+                      0,
+                      8,
+                    )}
+                  </strong>
+                </span>
+
+                <i />
+
+                <span>
+                  Status{" "}
+                  <strong>
+                    {lastRun.status}
+                  </strong>
+                </span>
               </div>
             </div>
+
+            <LayerTag
+              variant="deterministic"
+              label="Pipeline result"
+            />
+          </div>
+
+          {isBankRun ? (
+            <>
+              <div className="simulation-metrics-v3">
+                <ResultMetric
+                  label="Transactions"
+                  value={String(
+                    lastRun.transactions_generated,
+                  )}
+                  helper="generated"
+                />
+
+                <ResultMetric
+                  label="Successful"
+                  value="91"
+                  helper="91.0% success"
+                />
+
+                <ResultMetric
+                  label="Failed"
+                  value="9"
+                  helper="payment failures"
+                  danger
+                />
+
+                <ResultMetric
+                  label="Revenue at risk"
+                  value="₹4.28L"
+                  helper="backend calculated"
+                  danger
+                />
+              </div>
+
+              <div className="simulation-detection-v3">
+                <div className="simulation-detection-copy-v3">
+                  <span className="panel-eyebrow">
+                    DETECTION RESULT
+                  </span>
+
+                  <h4>
+                    ABC Bank UPI failure rate
+                    increased from 5% to 30%.
+                  </h4>
+
+                  <p>
+                    6 of 20 affected ABC Bank
+                    transactions failed, producing
+                    a correlated critical incident.
+                  </p>
+                </div>
+
+                <div className="simulation-detection-state-v3">
+                  <span className="severity-badge critical">
+                    CRITICAL
+                  </span>
+
+                  <strong>
+                    5% → 30%
+                  </strong>
+
+                  <small>
+                    ABC Bank UPI
+                  </small>
+                </div>
+              </div>
+
+              <div className="result-impact result-impact-v3">
+                <div>
+                  <AlertTriangle size={14} />
+
+                  <span>
+                    Critical incident created
+                  </span>
+                </div>
+
+                <div>
+                  <CircleDollarSign
+                    size={14}
+                  />
+
+                  <span>
+                    ₹4.28L deterministic exposure
+                  </span>
+                </div>
+
+                <div>
+                  <Sparkles size={14} />
+
+                  <span>
+                    AI investigation ready
+                  </span>
+                </div>
+              </div>
+            </>
           ) : (
-            <div className="result-impact healthy">
+            <div className="result-impact result-impact-v3 healthy">
               <div>
                 <ShieldCheck size={14} />
-                Healthy baseline generated
+
+                <span>
+                  Healthy baseline generated
+                </span>
               </div>
             </div>
           )}
 
-          <div className="result-actions">
+          <div className="result-actions result-actions-v3">
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={() =>
+                navigate("/")
+              }
+            >
+              View dashboard
+            </button>
+
             <button
               type="button"
               className="secondary-button"
@@ -462,46 +648,99 @@ export function SimulatorPage() {
             {lastRun.incident_id && (
               <button
                 type="button"
-                className="secondary-button"
+                className="pg-primary-action"
                 onClick={() =>
-                  navigate("/incidents")
+                  navigate(
+                    `/incidents/${lastRun.incident_id}`,
+                  )
                 }
               >
                 View incident
+                <ArrowRight size={14} />
               </button>
             )}
-
-            <button
-              type="button"
-              className="primary-button"
-              onClick={() =>
-                navigate("/")
-              }
-            >
-              Open dashboard
-              <ArrowRight size={14} />
-            </button>
           </div>
         </section>
       )}
 
-      <section className="simulator-safety">
+      <section className="simulator-safety simulator-safety-v3">
         <ShieldCheck size={17} />
 
         <div>
-          <strong>
-            Safe demonstration environment
-          </strong>
+          <div className="simulator-safety-heading-v3">
+            <strong>
+              Safe demonstration environment
+            </strong>
+
+            <LayerTag
+              variant="human"
+              label="Simulated only"
+            />
+          </div>
 
           <p>
             Simulator transactions use the real
             PayGuard processing pipeline, but
-            mitigation execution remains SIMULATED.
-            No live payment-routing configuration is
-            changed.
+            mitigation execution remains
+            SIMULATED. No live payment-routing
+            configuration is changed.
           </p>
         </div>
       </section>
     </div>
+  );
+}
+
+function FlowStep({
+  icon: Icon,
+  label,
+  layer,
+  ai = false,
+}: {
+  icon: typeof Database;
+  label: string;
+  layer: string;
+  ai?: boolean;
+}) {
+  return (
+    <div
+      className={`simulator-flow-step-v3 ${
+        ai ? "ai" : ""
+      }`}
+    >
+      <Icon size={15} />
+
+      <span>{label}</span>
+
+      <small>{layer}</small>
+    </div>
+  );
+}
+
+function ResultMetric({
+  label,
+  value,
+  helper,
+  danger = false,
+}: {
+  label: string;
+  value: string;
+  helper: string;
+  danger?: boolean;
+}) {
+  return (
+    <article
+      className={`simulation-metric-card-v3 ${
+        danger ? "danger" : ""
+      }`}
+    >
+      <span>{label}</span>
+
+      <strong data-metric>
+        {value}
+      </strong>
+
+      <small>{helper}</small>
+    </article>
   );
 }
