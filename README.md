@@ -32,6 +32,22 @@ PayGuard continuously:
 
 ---
 
+## Product Screenshots
+
+### Risk Command Center
+
+![PayGuard AI Dashboard](docs/screenshots/dashboard.png)
+
+### AI Incident Investigation
+
+![PayGuard AI Incident Investigation](docs/screenshots/incident-investigation.png)
+
+### Grounded AI Risk Copilot
+
+![PayGuard AI Copilot](docs/screenshots/ai-copilot.png)
+
+---
+
 ## The Problem
 
 Payment operations teams often rely on dashboards, static alerts, and manual investigation.
