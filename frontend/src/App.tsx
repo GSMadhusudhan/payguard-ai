@@ -12,6 +12,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { IncidentsPage } from "./pages/IncidentsPage";
 import { IncidentDetailPage } from "./pages/IncidentDetailPage";
 import { LoginPage } from "./pages/LoginPage";
+import { SignupPage } from "./pages/SignupPage";
 import { SimulatorPage } from "./pages/SimulatorPage";
 import { TransactionsPage } from "./pages/TransactionsPage";
 
@@ -26,6 +27,11 @@ export default function App() {
           />
 
           <Route
+            path="/signup"
+            element={<SignupPage />}
+          />
+
+          <Route
             element={
               <ProtectedRoute>
                 <AppShell />
@@ -34,27 +40,44 @@ export default function App() {
           >
             <Route
               index
-              element={<DashboardPage />}
+              element={
+                <DashboardPage />
+              }
             />
+
             <Route
               path="transactions"
-              element={<TransactionsPage />}
+              element={
+                <TransactionsPage />
+              }
             />
+
             <Route
               path="incidents"
-              element={<IncidentsPage />}
+              element={
+                <IncidentsPage />
+              }
             />
+
             <Route
               path="incidents/:incidentId"
-              element={<IncidentDetailPage />}
+              element={
+                <IncidentDetailPage />
+              }
             />
+
             <Route
               path="copilot"
-              element={<CopilotPage />}
+              element={
+                <CopilotPage />
+              }
             />
+
             <Route
               path="simulator"
-              element={<SimulatorPage />}
+              element={
+                <SimulatorPage />
+              }
             />
           </Route>
         </Routes>

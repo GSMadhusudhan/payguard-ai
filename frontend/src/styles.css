@@ -7578,3 +7578,2345 @@ strong {
   border-radius:
     var(--pg-radius-md);
 }
+
+
+/* ==========================================================
+   PAYGUARD MOTION SYSTEM
+   ========================================================== */
+
+.pg-signal {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.pg-signal-core {
+  position: relative;
+  z-index: 2;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 999px;
+
+  background: var(--pg-accent-lime);
+}
+
+.pg-signal-ring {
+  position: absolute;
+
+  left: 0;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 999px;
+
+  border: 1px solid
+    var(--pg-accent-lime);
+
+  pointer-events: none;
+}
+
+.pg-signal--critical
+.pg-signal-core {
+  background: var(--pg-status-red);
+}
+
+.pg-signal--critical
+.pg-signal-ring {
+  border-color: var(--pg-status-red);
+}
+
+.pg-signal--healthy
+.pg-signal-core {
+  background: var(--pg-status-green);
+}
+
+.pg-signal--healthy
+.pg-signal-ring {
+  border-color: var(--pg-status-green);
+}
+
+.pg-signal--warning
+.pg-signal-core {
+  background: var(--pg-status-amber);
+}
+
+.pg-signal--warning
+.pg-signal-ring {
+  border-color: var(--pg-status-amber);
+}
+
+.pg-signal-label {
+  color: var(--pg-text-secondary);
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.04em;
+}
+
+
+/* Keep motion respectful of OS preferences. */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ==========================================================
+   PAYGUARD — MOTION NAVIGATION
+   ========================================================== */
+
+.main-route-motion {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+
+/* Animated sidebar selector */
+
+.nav-item {
+  position: relative;
+
+  isolation: isolate;
+
+  overflow: hidden;
+
+  transform:
+    translateX(0);
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.nav-item:not(.active):hover {
+  transform:
+    translateX(2px);
+}
+
+.nav-active-motion {
+  position: absolute;
+
+  z-index: 0;
+
+  inset: 0;
+
+  border:
+    1px solid
+    rgba(198, 241, 53, 0.13);
+
+  border-radius:
+    inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(
+        198,
+        241,
+        53,
+        0.105
+      ),
+      rgba(
+        198,
+        241,
+        53,
+        0.035
+      )
+    );
+
+  box-shadow:
+    inset 2px 0 0
+      var(--pg-accent-lime),
+    0 0 22px
+      rgba(
+        198,
+        241,
+        53,
+        0.025
+      );
+
+  pointer-events: none;
+}
+
+.nav-item > svg,
+.nav-item-label {
+  position: relative;
+
+  z-index: 1;
+}
+
+.nav-item.active {
+  background:
+    transparent !important;
+}
+
+.nav-item.active > svg {
+  color:
+    var(--pg-accent-lime);
+}
+
+.nav-item.active
+.nav-item-label {
+  color:
+    var(--pg-text-primary);
+}
+
+
+/* Brand intelligence glow */
+
+.brand-mark {
+  position: relative;
+}
+
+.brand-mark::after {
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  z-index: -1;
+
+  border-radius: 12px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(
+        198,
+        241,
+        53,
+        0.13
+      ),
+      transparent 68%
+    );
+
+  opacity: 0.7;
+
+  pointer-events: none;
+}
+
+
+/* Merchant workspace microinteraction */
+
+.merchant-card {
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.merchant-card:hover {
+  border-color:
+    var(--pg-border-strong);
+}
+
+
+/* Live system area */
+
+.system-status {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.system-status::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 18px;
+  right: 18px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(
+        198,
+        241,
+        53,
+        0.13
+      ),
+      transparent
+    );
+}
+
+.status-line {
+  min-height: 23px;
+}
+
+
+/* Subtle route transition stability */
+
+.page-content {
+  position: relative;
+
+  min-width: 0;
+}
+
+
+/* Motion should never compromise usability */
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-item,
+  .merchant-card,
+  .logout-button {
+    transform:
+      none !important;
+  }
+}
+
+
+/* ==========================================================
+   PAYGUARD — CINEMATIC 3D SIGNUP
+   ========================================================== */
+
+.signup-page {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.18fr)
+    minmax(460px, 0.82fr);
+
+  overflow: hidden;
+
+  background: #07090d;
+
+  color: var(--pg-text-primary);
+}
+
+
+/* ----------------------------------------------------------
+   VIDEO HERO
+   ---------------------------------------------------------- */
+
+.signup-cinematic {
+  position: relative;
+
+  min-width: 0;
+  min-height: 100vh;
+
+  overflow: hidden;
+
+  background: #05070a;
+}
+
+.signup-video-layer {
+  position: absolute;
+
+  inset: -2%;
+
+  will-change: transform;
+}
+
+.signup-video {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  object-position: center center;
+
+  filter:
+    saturate(0.9)
+    contrast(1.04)
+    brightness(0.72);
+}
+
+.signup-video-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 7, 10, 0.26)
+      0%,
+      rgba(5, 7, 10, 0.04)
+      40%,
+      rgba(5, 7, 10, 0.32)
+      100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 7, 10, 0.26)
+      0%,
+      rgba(5, 7, 10, 0.06)
+      42%,
+      rgba(5, 7, 10, 0.82)
+      100%
+    );
+
+  pointer-events: none;
+}
+
+.signup-video-vignette {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 56% 42%,
+      transparent 16%,
+      rgba(5, 7, 10, 0.08)
+      55%,
+      rgba(5, 7, 10, 0.58)
+      100%
+    );
+
+  pointer-events: none;
+}
+
+
+/* ----------------------------------------------------------
+   HERO CONTENT
+   ---------------------------------------------------------- */
+
+.signup-cinematic-content {
+  position: relative;
+
+  z-index: 3;
+
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  padding:
+    38px
+    42px
+    38px;
+}
+
+.signup-brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+}
+
+.signup-brand-mark {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  border:
+    1px solid
+    rgba(
+      198,
+      241,
+      53,
+      0.27
+    );
+
+  border-radius: 12px;
+
+  color:
+    var(--pg-accent-lime);
+
+  background:
+    rgba(
+      198,
+      241,
+      53,
+      0.07
+    );
+
+  box-shadow:
+    0
+    0
+    32px
+    rgba(
+      198,
+      241,
+      53,
+      0.12
+    );
+
+  backdrop-filter:
+    blur(12px);
+}
+
+.signup-brand > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.signup-brand strong {
+  font-size: 17px;
+
+  letter-spacing:
+    -0.02em;
+}
+
+.signup-brand span {
+  color:
+    rgba(
+      244,
+      245,
+      243,
+      0.54
+    );
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    0.11em;
+
+  text-transform:
+    uppercase;
+}
+
+.signup-hero-copy {
+  max-width: 600px;
+
+  margin-top: auto;
+
+  margin-bottom: 34px;
+}
+
+.signup-eyebrow {
+  margin-bottom: 14px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    var(--pg-accent-lime);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    0.11em;
+}
+
+.signup-hero-copy h1 {
+  max-width: 600px;
+
+  margin:
+    0
+    0
+    16px;
+
+  color:
+    #f6f7f3;
+
+  font-size:
+    clamp(
+      46px,
+      5.3vw,
+      76px
+    );
+
+  line-height: 0.96;
+
+  font-weight: 700;
+
+  letter-spacing:
+    -0.055em;
+
+  text-shadow:
+    0
+    15px
+    40px
+    rgba(
+      0,
+      0,
+      0,
+      0.4
+    );
+}
+
+.signup-hero-copy p {
+  max-width: 510px;
+
+  margin: 0;
+
+  color:
+    rgba(
+      244,
+      245,
+      243,
+      0.66
+    );
+
+  font-size: 13px;
+
+  line-height: 1.72;
+}
+
+
+/* ----------------------------------------------------------
+   INTELLIGENCE STRIP
+   ---------------------------------------------------------- */
+
+.signup-intelligence-strip {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    auto
+    1fr
+    auto
+    1fr;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding:
+    14px
+    16px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      8,
+      10,
+      14,
+      0.56
+    );
+
+  box-shadow:
+    0
+    18px
+    50px
+    rgba(
+      0,
+      0,
+      0,
+      0.22
+    );
+
+  backdrop-filter:
+    blur(18px);
+}
+
+.signup-intelligence-item {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.signup-intelligence-item span {
+  color:
+    var(--pg-accent-lime);
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    0.1em;
+}
+
+.signup-intelligence-item strong {
+  color:
+    rgba(
+      244,
+      245,
+      243,
+      0.84
+    );
+
+  font-size: 10px;
+}
+
+.signup-strip-line {
+  width: 1px;
+  height: 25px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.085
+    );
+}
+
+
+/* ----------------------------------------------------------
+   FORM SIDE
+   ---------------------------------------------------------- */
+
+.signup-form-side {
+  position: relative;
+
+  z-index: 5;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    34px
+    42px;
+
+  border-left:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(
+        14,
+        16,
+        21,
+        0.98
+      ),
+      rgba(
+        8,
+        10,
+        14,
+        0.99
+      )
+    );
+}
+
+.signup-form-side::before {
+  content: "";
+
+  position: absolute;
+
+  top: 9%;
+  left: -110px;
+
+  width: 220px;
+  height: 420px;
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(
+        198,
+        241,
+        53,
+        0.07
+      ),
+      transparent 68%
+    );
+
+  pointer-events: none;
+}
+
+.signup-form-wrap {
+  width: min(
+    100%,
+    510px
+  );
+
+  padding:
+    28px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      155deg,
+      rgba(
+        23,
+        25,
+        31,
+        0.94
+      ),
+      rgba(
+        14,
+        16,
+        21,
+        0.96
+      )
+    );
+
+  box-shadow:
+    0
+    28px
+    80px
+    rgba(
+      0,
+      0,
+      0,
+      0.32
+    );
+
+  backdrop-filter:
+    blur(22px);
+}
+
+
+/* ----------------------------------------------------------
+   FORM HEADER
+   ---------------------------------------------------------- */
+
+.signup-form-heading {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 13px;
+
+  margin-bottom: 24px;
+}
+
+.signup-lock {
+  flex: 0 0 auto;
+
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  color:
+    var(--pg-accent-lime);
+
+  background:
+    rgba(
+      198,
+      241,
+      53,
+      0.075
+    );
+
+  border:
+    1px solid
+    rgba(
+      198,
+      241,
+      53,
+      0.15
+    );
+}
+
+.signup-form-heading span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color:
+    var(--pg-text-secondary);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    0.1em;
+}
+
+.signup-form-heading h2 {
+  margin:
+    0
+    0
+    5px;
+
+  color:
+    var(--pg-text-primary);
+
+  font-size: 26px;
+
+  line-height: 1.08;
+
+  letter-spacing:
+    -0.035em;
+}
+
+.signup-form-heading p {
+  margin: 0;
+
+  color:
+    var(--pg-text-secondary);
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+
+/* ----------------------------------------------------------
+   FIELDS
+   ---------------------------------------------------------- */
+
+.signup-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.signup-fields-two {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr;
+
+  gap: 11px;
+}
+
+.signup-field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.signup-field label {
+  color:
+    rgba(
+      244,
+      245,
+      243,
+      0.74
+    );
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+.signup-field input,
+.signup-password-wrap {
+  width: 100%;
+
+  min-height: 44px;
+
+  box-sizing:
+    border-box;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background:
+    rgba(
+      6,
+      8,
+      11,
+      0.68
+    );
+
+  color:
+    var(--pg-text-primary);
+
+  transition:
+    border-color
+      160ms ease,
+    box-shadow
+      160ms ease,
+    transform
+      160ms ease,
+    background
+      160ms ease;
+}
+
+.signup-field input {
+  padding:
+    0
+    12px;
+
+  font: inherit;
+
+  font-size: 11px;
+}
+
+.signup-field input::placeholder {
+  color:
+    rgba(
+      156,
+      160,
+      168,
+      0.55
+    );
+}
+
+.signup-field input:hover,
+.signup-password-wrap:hover {
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.14
+    );
+}
+
+.signup-field input:focus,
+.signup-password-wrap:focus-within {
+  border-color:
+    rgba(
+      198,
+      241,
+      53,
+      0.48
+    );
+
+  background:
+    rgba(
+      8,
+      10,
+      14,
+      0.82
+    );
+
+  box-shadow:
+    0
+    0
+    0
+    3px
+    rgba(
+      198,
+      241,
+      53,
+      0.055
+    );
+}
+
+.signup-password-wrap {
+  display: flex;
+
+  align-items: center;
+}
+
+.signup-password-wrap input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 42px;
+
+  border: 0 !important;
+
+  background:
+    transparent !important;
+
+  box-shadow:
+    none !important;
+}
+
+.signup-eye-button {
+  flex:
+    0
+    0
+    auto;
+
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  margin-right: 3px;
+
+  border: 0;
+
+  border-radius: 7px;
+
+  background:
+    transparent;
+
+  color:
+    var(--pg-text-secondary);
+
+  cursor: pointer;
+}
+
+.signup-eye-button:hover {
+  color:
+    var(--pg-text-primary);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.035
+    );
+}
+
+
+/* ----------------------------------------------------------
+   PASSWORD RULES
+   ---------------------------------------------------------- */
+
+.signup-password-rules {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+.signup-password-rule {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color:
+    var(--pg-text-disabled);
+
+  font-size: 9px;
+}
+
+.signup-password-rule span {
+  width: 14px;
+  height: 14px;
+
+  display: grid;
+  place-items: center;
+
+  border:
+    1px solid
+    var(--pg-border-subtle);
+
+  border-radius: 999px;
+}
+
+.signup-password-rule.valid {
+  color:
+    var(--pg-status-green);
+}
+
+.signup-password-rule.valid span {
+  border-color:
+    rgba(
+      61,
+      220,
+      132,
+      0.25
+    );
+
+  background:
+    rgba(
+      61,
+      220,
+      132,
+      0.07
+    );
+}
+
+
+/* ----------------------------------------------------------
+   ERROR / SUBMIT
+   ---------------------------------------------------------- */
+
+.signup-error {
+  padding:
+    9px
+    11px;
+
+  border:
+    1px solid
+    rgba(
+      240,
+      85,
+      74,
+      0.2
+    );
+
+  border-radius: 8px;
+
+  background:
+    rgba(
+      240,
+      85,
+      74,
+      0.045
+    );
+
+  color:
+    #ffb7b1;
+
+  font-size: 10px;
+}
+
+.signup-submit {
+  min-height: 46px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  background:
+    var(--pg-accent-lime);
+
+  color: #0a0c08;
+
+  font: inherit;
+
+  font-size: 11px;
+
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0
+    10px
+    30px
+    rgba(
+      198,
+      241,
+      53,
+      0.095
+    );
+}
+
+.signup-submit:hover:not(:disabled) {
+  box-shadow:
+    0
+    14px
+    36px
+    rgba(
+      198,
+      241,
+      53,
+      0.15
+    );
+}
+
+.signup-submit:disabled {
+  opacity: 0.48;
+
+  cursor:
+    not-allowed;
+}
+
+.signup-security {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color:
+    var(--pg-text-disabled);
+
+  font-size: 8px;
+}
+
+.signup-security svg {
+  color:
+    var(--pg-text-secondary);
+}
+
+
+/* ----------------------------------------------------------
+   LOGIN LINK
+   ---------------------------------------------------------- */
+
+.signup-login-link {
+  margin-top: 20px;
+
+  padding-top: 17px;
+
+  border-top:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color:
+    var(--pg-text-secondary);
+
+  font-size: 10px;
+}
+
+.signup-login-link a {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  color:
+    var(--pg-accent-lime);
+
+  font-weight: 650;
+
+  text-decoration: none;
+}
+
+.signup-login-link a:hover {
+  text-decoration:
+    underline;
+}
+
+
+/* ----------------------------------------------------------
+   REDUCED MOTION
+   ---------------------------------------------------------- */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .signup-video {
+    animation: none !important;
+  }
+}
+.login-create-account {
+  margin-top: 14px;
+  padding-top: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border-top: 1px solid
+    rgba(255, 255, 255, 0.06);
+
+  color: var(--pg-text-secondary);
+
+  font-size: 10px;
+}
+
+.login-create-account a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  color: var(--pg-accent-lime);
+
+  font-weight: 650;
+  text-decoration: none;
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.login-create-account a:hover {
+  opacity: 0.9;
+  transform: translateX(2px);
+}
+/* ==========================================================
+   SIGNUP — ADVANCED MOTION DEPTH
+   ========================================================== */
+
+.signup-cinematic {
+  perspective: 1400px;
+}
+
+.signup-video-layer {
+  will-change: transform;
+}
+
+.signup-card-perspective {
+  width: min(100%, 510px);
+  perspective: 1300px;
+}
+
+.signup-form-wrap-motion {
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.signup-form-wrap-motion::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+
+  border-radius: inherit;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(198, 241, 53, 0.055),
+      transparent 42%
+    );
+
+  pointer-events: none;
+}
+
+.signup-form-heading,
+.signup-form,
+.signup-login-link {
+  transform: translateZ(1px);
+}
+
+.signup-submit {
+  overflow: hidden;
+  position: relative;
+}
+
+.signup-submit::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: -40%;
+
+  width: 25%;
+
+  transform: skewX(-18deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.24),
+      transparent
+    );
+
+  transition:
+    left 520ms ease;
+}
+
+.signup-submit:hover:not(:disabled)::before {
+  left: 120%;
+}
+
+.signup-submit-arrow {
+  display: inline-flex;
+  align-items: center;
+}
+
+.signup-hero-motion {
+  transform:
+    translateY(-8px);
+}
+
+.signup-intelligence-item {
+  position: relative;
+}
+
+.signup-intelligence-item::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: -6px;
+
+  width: 18px;
+  height: 1px;
+
+  background:
+    var(--pg-accent-lime);
+
+  opacity: 0.32;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signup-video-layer,
+  .signup-form-wrap-motion {
+    transform: none !important;
+  }
+
+  .signup-submit::before {
+    display: none;
+  }
+}
+/* ==========================================================
+   PAYGUARD — CINEMATIC LOGIN MOTION
+   ========================================================== */
+
+.login-motion-page {
+  width: 100%;
+  min-height: 100vh;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.18fr)
+    minmax(460px, 0.82fr);
+
+  overflow: hidden;
+
+  background: #07090d;
+}
+
+
+/* ----------------------------------------------------------
+   VIDEO HERO
+   ---------------------------------------------------------- */
+
+.login-motion-visual {
+  position: relative;
+
+  min-height: 100vh;
+
+  overflow: hidden;
+
+  background: #05070a;
+
+  perspective: 1400px;
+}
+
+.login-motion-video-layer {
+  position: absolute;
+
+  inset: -2%;
+
+  will-change: transform;
+}
+
+.login-motion-video {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  object-position:
+    center center;
+
+  filter:
+    saturate(0.9)
+    contrast(1.04)
+    brightness(0.66);
+}
+
+.login-motion-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 7, 10, 0.30),
+      rgba(5, 7, 10, 0.04) 45%,
+      rgba(5, 7, 10, 0.30)
+    ),
+    linear-gradient(
+      180deg,
+      rgba(5, 7, 10, 0.25),
+      transparent 42%,
+      rgba(5, 7, 10, 0.86)
+    );
+
+  pointer-events: none;
+}
+
+.login-motion-vignette {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 55% 42%,
+      transparent 17%,
+      rgba(5, 7, 10, 0.05) 52%,
+      rgba(5, 7, 10, 0.54) 100%
+    );
+
+  pointer-events: none;
+}
+
+.login-motion-content {
+  position: relative;
+
+  z-index: 2;
+
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding:
+    38px
+    42px;
+}
+
+
+/* ----------------------------------------------------------
+   HERO COPY
+   ---------------------------------------------------------- */
+
+.login-motion-hero {
+  max-width: 650px;
+
+  margin-top: auto;
+  margin-bottom: 34px;
+}
+
+.login-motion-hero h1 {
+  margin:
+    0
+    0
+    16px;
+
+  color:
+    var(--pg-text-primary);
+
+  font-size:
+    clamp(
+      44px,
+      5.1vw,
+      72px
+    );
+
+  line-height: 0.97;
+
+  font-weight: 700;
+
+  letter-spacing:
+    -0.052em;
+
+  text-shadow:
+    0 18px 50px
+    rgba(0, 0, 0, 0.44);
+}
+
+.login-motion-hero p {
+  max-width: 510px;
+
+  margin: 0;
+
+  color:
+    rgba(
+      244,
+      245,
+      243,
+      0.66
+    );
+
+  font-size: 13px;
+
+  line-height: 1.72;
+}
+
+
+/* ----------------------------------------------------------
+   SIGNAL STRIP
+   ---------------------------------------------------------- */
+
+.login-motion-strip {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    auto
+    1fr
+    auto
+    1fr;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding:
+    14px
+    16px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      8,
+      10,
+      14,
+      0.56
+    );
+
+  backdrop-filter:
+    blur(18px);
+}
+
+.login-motion-signal {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.login-motion-signal span {
+  color:
+    var(--pg-accent-lime);
+
+  font-size: 7px;
+
+  font-weight: 700;
+
+  letter-spacing:
+    0.1em;
+}
+
+.login-motion-signal strong {
+  color:
+    rgba(
+      244,
+      245,
+      243,
+      0.84
+    );
+
+  font-size: 10px;
+}
+
+.login-motion-divider {
+  width: 1px;
+  height: 25px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.085
+    );
+}
+
+
+/* ----------------------------------------------------------
+   FORM SIDE
+   ---------------------------------------------------------- */
+
+.login-motion-form-side {
+  min-height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    34px
+    42px;
+
+  border-left:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(
+        14,
+        16,
+        21,
+        0.98
+      ),
+      rgba(
+        8,
+        10,
+        14,
+        0.99
+      )
+    );
+}
+
+.login-motion-perspective {
+  width: min(
+    100%,
+    430px
+  );
+
+  perspective: 1300px;
+}
+
+.login-card-motion {
+  width: 100%;
+
+  box-sizing:
+    border-box;
+
+  transform-style:
+    preserve-3d;
+
+  will-change:
+    transform;
+}
+
+.login-motion-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.login-motion-form label {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+/* ----------------------------------------------------------
+   BUTTON MOTION
+   ---------------------------------------------------------- */
+
+.login-submit-motion {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.login-submit-motion::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: -40%;
+
+  width: 25%;
+
+  transform:
+    skewX(-18deg);
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(
+        255,
+        255,
+        255,
+        0.25
+      ),
+      transparent
+    );
+
+  transition:
+    left
+    520ms ease;
+}
+
+.login-submit-motion:hover:not(:disabled)::before {
+  left: 120%;
+}
+
+.login-motion-arrow {
+  display: inline-flex;
+
+  align-items: center;
+}
+
+
+/* ----------------------------------------------------------
+   REDUCED MOTION
+   ---------------------------------------------------------- */
+
+@media (
+  prefers-reduced-motion:
+    reduce
+) {
+  .login-motion-video-layer,
+  .login-card-motion {
+    transform:
+      none !important;
+  }
+
+  .login-submit-motion::before {
+    display: none;
+  }
+}
+/* ==========================================================
+   AUTH BUTTON VALID / DISABLED STATES
+   ========================================================== */
+
+.login-submit:disabled,
+.signup-submit:disabled {
+  background: rgba(198, 241, 53, 0.48) !important;
+  color: rgba(6, 8, 10, 0.62) !important;
+
+  border-color: transparent !important;
+
+  box-shadow: none !important;
+
+  cursor: not-allowed;
+
+  opacity: 0.72;
+
+  transform: none !important;
+}
+
+.login-submit:not(:disabled),
+.signup-submit:not(:disabled) {
+  background: #c6f135 !important;
+  color: #090b08 !important;
+
+  opacity: 1;
+
+  box-shadow:
+    0 0 0 1px rgba(198, 241, 53, 0.12),
+    0 8px 30px rgba(198, 241, 53, 0.09);
+}
+
+.login-submit:not(:disabled):hover,
+.signup-submit:not(:disabled):hover {
+  box-shadow:
+    0 0 0 1px rgba(198, 241, 53, 0.18),
+    0 12px 36px rgba(198, 241, 53, 0.16);
+}
+
+/* ==========================================================
+   INCIDENT DETAIL — MOTION SUPPORT
+   ========================================================== */
+
+.incident-confidence-motion {
+  margin-top: 14px;
+  padding: 13px 14px;
+  border: 1px solid rgba(198, 241, 53, 0.09);
+  border-radius: 12px;
+  background: rgba(198, 241, 53, 0.025);
+}
+
+.incident-confidence-motion-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  font-size: 11px;
+  color: var(--pg-text-secondary);
+}
+
+.incident-confidence-motion-top [data-metric] {
+  color: var(--pg-accent-lime);
+  font-weight: 700;
+}
+
+.incident-confidence-track {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.incident-confidence-track span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(198, 241, 53, 0.55),
+      var(--pg-accent-lime)
+    );
+
+  box-shadow:
+    0 0 14px
+    rgba(198, 241, 53, 0.15);
+}
+
+.recommendation-progress > i {
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .incident-confidence-track span {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================
+   SIMULATOR RESULT — FINAL LAYOUT FIX
+   ========================================================== */
+
+/*
+ * The result section also has the legacy
+ * "simulation-result" class.
+ *
+ * Force the V3 result back into a normal vertical document
+ * flow so header, metrics, detection and actions do not get
+ * placed into separate legacy grid columns.
+ */
+.simulation-result.simulation-result-v3 {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  padding: 22px;
+  box-sizing: border-box;
+}
+
+/* ----------------------------------------------------------
+   HEADER
+   ---------------------------------------------------------- */
+
+.simulation-result-v3 .simulation-result-header-v3 {
+  display: grid !important;
+
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    auto !important;
+
+  align-items: center;
+  gap: 14px;
+
+  width: 100%;
+  min-width: 0;
+}
+
+.simulation-result-v3 .result-main {
+  min-width: 0;
+  width: 100%;
+}
+
+.simulation-result-v3 .result-main h3 {
+  margin-top: 5px;
+  max-width: 720px;
+
+  font-size: 19px;
+  line-height: 1.35;
+
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.simulation-result-v3 .result-metadata {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 8px;
+}
+
+/* Prevent Pipeline Result from squeezing the title */
+.simulation-result-header-v3 > :last-child {
+  flex-shrink: 0;
+  justify-self: end;
+}
+
+/* ----------------------------------------------------------
+   METRICS
+   ---------------------------------------------------------- */
+
+.simulation-result-v3 .simulation-metrics-v3 {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr)) !important;
+
+  width: 100%;
+  min-width: 0;
+
+  margin-top: 20px;
+
+  gap: 10px;
+}
+
+.simulation-result-v3 .simulation-metric-card-v3 {
+  min-width: 0;
+  width: auto;
+
+  padding: 15px;
+}
+
+.simulation-result-v3
+  .simulation-metric-card-v3
+  strong {
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------
+   DETECTION
+   ---------------------------------------------------------- */
+
+.simulation-result-v3 .simulation-detection-v3 {
+  display: grid !important;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(220px, 300px) !important;
+
+  align-items: center;
+
+  width: 100%;
+  min-width: 0;
+
+  margin-top: 14px;
+
+  gap: 24px;
+}
+
+.simulation-result-v3
+  .simulation-detection-copy-v3 {
+  min-width: 0;
+}
+
+.simulation-result-v3
+  .simulation-detection-copy-v3
+  h4 {
+  margin:
+    6px
+    0;
+
+  max-width: 640px;
+
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.simulation-result-v3
+  .simulation-detection-copy-v3
+  p {
+  max-width: 650px;
+
+  line-height: 1.55;
+}
+
+.simulation-result-v3
+  .simulation-detection-state-v3 {
+  width: 100%;
+  min-width: 0;
+
+  justify-self: end;
+
+  box-sizing: border-box;
+}
+
+/* ----------------------------------------------------------
+   IMPACT STRIP
+   ---------------------------------------------------------- */
+
+.simulation-result-v3 .result-impact-v3 {
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr)) !important;
+
+  width: 100%;
+  min-width: 0;
+
+  margin-top: 14px;
+
+  gap: 9px;
+}
+
+.simulation-result-v3
+  .result-impact-v3
+  > div {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+
+  gap: 8px;
+}
+
+.simulation-result-v3
+  .result-impact-v3
+  span {
+  white-space: normal;
+  word-break: normal;
+}
+
+/* Healthy result only has one item */
+.simulation-result-v3
+  .result-impact-v3.healthy {
+  grid-template-columns:
+    minmax(0, 1fr) !important;
+}
+
+/* ----------------------------------------------------------
+   ACTIONS
+   ---------------------------------------------------------- */
+
+.simulation-result-v3 .result-actions-v3 {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+  width: 100%;
+
+  gap: 9px;
+
+  margin-top: 18px;
+  padding-top: 16px;
+
+  border-top:
+    1px solid
+    var(--pg-border-subtle);
+}
+
+.simulation-result-v3
+  .result-actions-v3
+  button {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------------------
+   RESULT SUCCESS ICON
+   ---------------------------------------------------------- */
+
+.simulation-result-v3 .result-success-icon {
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------------------
+   SAFETY
+   ---------------------------------------------------------- */
+
+.simulator-safety.simulator-safety-v3 {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ----------------------------------------------------------
+   SMALLER SCREENS
+   ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .simulation-result-v3 .simulation-metrics-v3 {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .simulation-result-v3 .simulation-detection-v3 {
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+  }
+
+  .simulation-result-v3
+    .simulation-detection-state-v3 {
+    justify-self: stretch;
+  }
+
+  .simulation-result-v3 .result-impact-v3 {
+    grid-template-columns:
+      minmax(0, 1fr) !important;
+  }
+}

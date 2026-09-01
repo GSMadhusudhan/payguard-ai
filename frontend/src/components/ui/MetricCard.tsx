@@ -1,10 +1,13 @@
 import type {
   LucideIcon,
 } from "lucide-react";
+import type {
+  ReactNode,
+} from "react";
 
 interface MetricCardProps {
   label: string;
-  value: string;
+  value: ReactNode;
   helper: string;
   icon: LucideIcon;
   tone?: "default" | "danger" | "success";
@@ -27,8 +30,13 @@ export function MetricCard({
         </div>
       </div>
 
-      <div className="metric-value">{value}</div>
-      <div className="metric-helper">{helper}</div>
+      <div className="metric-value">
+        {value}
+      </div>
+
+      <div className="metric-helper">
+        {helper}
+      </div>
     </article>
   );
 }

@@ -1,16 +1,58 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+)
 from sqlalchemy.orm import Session
 
 from app.db.models import User
 from app.db.session import get_db
-from app.modules.auth.dependencies import get_current_user
-from app.modules.auth.schemas import AuthUser, LoginRequest, LoginResponse
+from app.modules.auth.dependencies import (
+    get_current_user,
+)
+from app.modules.auth.schemas import (
+    AuthUser,
+    LoginRequest,
+    LoginResponse,
+    RegisterRequest,
+    RegisterResponse,
+)
 from app.modules.auth.service import (
     InvalidCredentialsError,
+    RegistrationConflictError,
     authenticate_user,
+    register_merchant_admin,
 )
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(
+    prefix="/auth",
+    tags=["Authentication"],
+)
+
+
+@router.post(
+    "/register",
+    response_model=RegisterResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def register(
+    registration: RegisterRequest,
+    db: Session = Depends(get_db),
+) -> RegisterResponse:
+    try:
+        return register_merchant_admin(
+            db,
+            registration,
+        )
+
+    except RegistrationConflictError as exc:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_409_CONFLICT
+            ),
+            detail=str(exc),
+        ) from None
 
 
 @router.post(
@@ -23,12 +65,21 @@ def login(
     db: Session = Depends(get_db),
 ) -> LoginResponse:
     try:
-        return authenticate_user(db, credentials)
+        return authenticate_user(
+            db,
+            credentials,
+        )
+
     except InvalidCredentialsError:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=(
+                status.HTTP_401_UNAUTHORIZED
+            ),
             detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Bearer"},
+            headers={
+                "WWW-Authenticate":
+                    "Bearer"
+            },
         ) from None
 
 
@@ -38,11 +89,15 @@ def login(
     status_code=status.HTTP_200_OK,
 )
 def get_me(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(
+        get_current_user,
+    ),
 ) -> AuthUser:
     return AuthUser(
         id=str(current_user.id),
-        merchant_id=str(current_user.merchant_id),
+        merchant_id=str(
+            current_user.merchant_id,
+        ),
         email=current_user.email,
         full_name=current_user.full_name,
         role=current_user.role,
